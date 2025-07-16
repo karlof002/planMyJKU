@@ -6,7 +6,7 @@ import { Navigation } from '../components/Navigation';
 import { CalendarHeader } from './components/CalendarHeader';
 import { CalendarGrid } from './components/CalendarGrid';
 import { ActivityModal } from './components/ActivityModal';
-import { TemplateModal } from './components/TemplateModal';
+import TemplateModal from './components/TemplateModal';
 import { ActivityTypeLegend } from './components/ActivityTypeLegend';
 
 interface User {
@@ -24,8 +24,6 @@ interface Template {
     title: string;
     description: string;
     type: 'exam' | 'assignment' | 'lecture' | 'meeting' | 'personal';
-    startTime: string;
-    endTime: string;
     color: string;
 }
 
@@ -58,6 +56,7 @@ export default function CalendarPage() {
     const [view, setView] = useState<'month' | 'week'>('month');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+    const [showDateModal, setShowDateModal] = useState(false);
     const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
@@ -122,8 +121,6 @@ export default function CalendarPage() {
                         title: 'Lecture',
                         description: 'Regular morning lecture',
                         type: 'lecture',
-                        startTime: '08:00',
-                        endTime: '09:30',
                         color: '#3b82f6'
                     },
                     {
@@ -131,8 +128,6 @@ export default function CalendarPage() {
                         title: 'Study Time',
                         description: 'Focused study session',
                         type: 'personal',
-                        startTime: '14:00',
-                        endTime: '16:00',
                         color: '#8b5cf6'
                     },
                     {
@@ -140,8 +135,6 @@ export default function CalendarPage() {
                         title: 'Assignment',
                         description: 'Assignment deadline',
                         type: 'assignment',
-                        startTime: '23:59',
-                        endTime: '23:59',
                         color: '#f59e0b'
                     }
                 ];
@@ -285,8 +278,9 @@ export default function CalendarPage() {
         try {
             if (!user) return;
 
-            const startDateTime = new Date(`${selectedDate}T${template.startTime}`);
-            const endDateTime = new Date(`${selectedDate}T${template.endTime}`);
+            // Use default time range (9:00 AM - 10:00 AM) for templates
+            const startDateTime = new Date(`${selectedDate}T09:00`);
+            const endDateTime = new Date(`${selectedDate}T10:00`);
 
             const payload = {
                 userId: user.id,
@@ -363,6 +357,21 @@ export default function CalendarPage() {
         setIsModalOpen(true);
     };
 
+    const handleDateClick = (date: string) => {
+        setSelectedDate(date);
+        setShowDateModal(true);
+    };
+
+    const handleShowActivityModal = () => {
+        setIsModalOpen(true);
+        setShowDateModal(false);
+    };
+
+    const handleShowTemplateModal = () => {
+        setIsTemplateModalOpen(true);
+        setShowDateModal(false);
+    };
+
     const navigateMonth = (direction: 'prev' | 'next') => {
         const newDate = new Date(currentDate);
         if (direction === 'prev') {
@@ -403,21 +412,53 @@ export default function CalendarPage() {
         }));
     };
 
+    const handleActivityDrop = async (activityId: string, newDate: string) => {
+        try {
+            const activity = activities.find(a => a.id === activityId);
+            if (!activity) return;
+
+            const startDateTime = new Date(`${newDate}T${activity.startTime}`);
+            const endDateTime = new Date(`${newDate}T${activity.endTime}`);
+
+            const payload = {
+                userId: user?.id,
+                title: activity.title,
+                description: activity.description || '',
+                startTime: startDateTime.toISOString(),
+                endTime: endDateTime.toISOString(),
+                type: activity.type,
+                color: activity.color || '#3b82f6'
+            };
+
+            const response = await fetch(`/api/activities?id=${activityId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                await fetchActivities();
+            }
+        } catch (error) {
+            console.error('Error moving activity:', error);
+        }
+    };
+
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background text-foreground">
-                <Navigation />
-                <div className="container mx-auto px-4 py-8">
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                    </div>
+            <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p>Loading calendar...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background">
             <Navigation />
             <div className="container mx-auto px-4 py-8">
                 <CalendarHeader
@@ -433,9 +474,10 @@ export default function CalendarPage() {
                             currentDate={currentDate}
                             view={view}
                             activities={activities}
-                            onDayClick={handleDayClick}
+                            onDateClick={handleDateClick}
                             onActivityClick={handleActivityClick}
                             selectedDate={selectedDate}
+                            onActivityDrop={handleActivityDrop}
                         />
                     </div>
 
@@ -448,15 +490,106 @@ export default function CalendarPage() {
                     </div>
                 </div>
 
+                {/* Date Modal */}
+                {showDateModal && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={() => setShowDateModal(false)}>
+                        <div className="flex items-center justify-center min-h-screen p-4">
+                            <div
+                                className="bg-card border border-border rounded-2xl w-full max-w-md shadow-xl"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                                            {selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', {
+                                                weekday: 'long',
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            }) : 'Select Date'}
+                                        </h2>
+                                        <button
+                                            onClick={() => setShowDateModal(false)}
+                                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                        >
+                                            <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    {/* Show activities for this date */}
+                                    {activities.filter(activity => activity.date === selectedDate).length > 0 && (
+                                        <div className="mb-6">
+                                            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Activities</h3>
+                                            <div className="space-y-2">
+                                                {activities.filter(activity => activity.date === selectedDate).map((activity) => (
+                                                    <div
+                                                        key={activity.id}
+                                                        className="flex items-center gap-3 p-3 bg-background border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-muted/50 cursor-pointer transition-colors"
+                                                        onClick={() => {
+                                                            setEditingActivity(activity);
+                                                            setIsModalOpen(true);
+                                                            setShowDateModal(false);
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className="w-3 h-3 rounded-full"
+                                                            style={{ backgroundColor: activity.color }}
+                                                        />
+                                                        <div className="flex-1">
+                                                            <div className="font-medium text-gray-900 dark:text-gray-100">{activity.title}</div>
+                                                            <div className="text-sm text-gray-600 dark:text-gray-300">
+                                                                {activity.startTime} - {activity.endTime}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Action buttons */}
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={handleShowActivityModal}
+                                            className="flex-1 px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 flex items-center justify-center gap-2"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                            Add Activity
+                                        </button>
+                                        <button
+                                            onClick={handleShowTemplateModal}
+                                            className="flex-1 px-4 py-3 border border-border rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-card-foreground flex items-center justify-center gap-2 transition-colors"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                            </svg>
+                                            Use Template
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Activity Modal */}
                 <ActivityModal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onSave={saveActivity}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setEditingActivity(null);
+                    }}
                     activity={editingActivity}
-                    selectedDate={selectedDate}
+                    onSave={saveActivity}
                     onDelete={deleteActivity}
+                    selectedDate={selectedDate}
                 />
 
+                {/* Template Modal */}
                 <TemplateModal
                     isOpen={isTemplateModalOpen}
                     onClose={() => setIsTemplateModalOpen(false)}

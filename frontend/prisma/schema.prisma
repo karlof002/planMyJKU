@@ -137,8 +137,6 @@ model Template {
   name        String
   title       String
   description String?
-  startTime   String   // Time format like "09:00"
-  endTime     String   // Time format like "10:30"
   type        String
   color       String   @default("#3b82f6")
   createdAt   DateTime @default(now())

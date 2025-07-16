@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '../../lib/db';
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,7 +10,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
         }
 
-        const activities = await prisma.activity.findMany({
+        const activities = await db.activity.findMany({
             where: { userId },
             orderBy: { startTime: 'asc' }
         });
@@ -33,7 +31,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const activity = await prisma.activity.create({
+        const activity = await db.activity.create({
             data: {
                 userId,
                 title,
@@ -68,7 +66,7 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const activity = await prisma.activity.update({
+        const activity = await db.activity.update({
             where: { id },
             data: {
                 title,
@@ -96,7 +94,7 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: 'Activity ID is required' }, { status: 400 });
         }
 
-        await prisma.activity.delete({
+        await db.activity.delete({
             where: { id }
         });
 

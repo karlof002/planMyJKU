@@ -37,7 +37,7 @@ export function ActivityTypeLegend({ activityTypes, selectedDate, onAddActivity 
                 {activityTypes.map((type) => (
                     <div
                         key={type.id}
-                        className="flex items-center justify-between p-3 rounded-xl border border-border hover:bg-muted/50 transition-colors group"
+                        className="flex items-center justify-between p-3 rounded-xl border border-border hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors group"
                     >
                         <div className="flex items-center gap-3">
                             <div
@@ -48,7 +48,7 @@ export function ActivityTypeLegend({ activityTypes, selectedDate, onAddActivity 
                                 <div className="text-sm font-medium text-card-foreground">
                                     {type.label}
                                 </div>
-                                <div className="text-xs text-muted-foreground">
+                                <div className="text-xs text-gray-600 dark:text-gray-300">
                                     {type.count} activities
                                 </div>
                             </div>
@@ -70,7 +70,7 @@ export function ActivityTypeLegend({ activityTypes, selectedDate, onAddActivity 
 
             {selectedDate && (
                 <div className="mt-6 pt-4 border-t border-border">
-                    <div className="text-xs text-muted-foreground mb-2">
+                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">
                         Selected Date
                     </div>
                     <div className="text-sm font-medium text-card-foreground">

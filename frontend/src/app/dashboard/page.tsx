@@ -118,18 +118,18 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground page-transition">
+        <div className="min-h-screen bg-background text-foreground">
             <Navigation />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="mb-8 slide-in-from-bottom-1">
+                <div className="mb-8">
                     <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
                     <p className="text-foreground/60">Welcome back! Here's your study progress overview</p>
                 </div>
 
                 {/* Stats Overview */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div className="bg-card border border-border rounded-lg p-6 slide-in-from-bottom-1">
+                    <div className="bg-card border border-border rounded-lg p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-foreground/70">Total Courses</p>
@@ -139,7 +139,7 @@ export default function DashboardPage() {
                         </div>
                     </div>
 
-                    <div className="bg-card border border-border rounded-lg p-6 slide-in-from-bottom-1">
+                    <div className="bg-card border border-border rounded-lg p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-foreground/70">Completed</p>
@@ -176,19 +176,19 @@ export default function DashboardPage() {
                     <div className="flex flex-wrap gap-4">
                         <button
                             onClick={() => router.push('/semesters')}
-                            className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium transition-colors"
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium"
                         >
                             Plan Semester
                         </button>
                         <button
                             onClick={() => router.push('/progress')}
-                            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium transition-colors"
+                            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium"
                         >
                             Track Progress
                         </button>
                         <button
                             onClick={() => router.push('/courses')}
-                            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium transition-colors"
+                            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium"
                         >
                             Browse Courses
                         </button>
@@ -225,7 +225,7 @@ export default function DashboardPage() {
                             <p className="text-foreground/60 mb-4">Start by browsing available courses and adding them to your plan</p>
                             <button
                                 onClick={() => router.push('/courses')}
-                                className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium transition-colors"
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium"
                             >
                                 Browse Courses
                             </button>

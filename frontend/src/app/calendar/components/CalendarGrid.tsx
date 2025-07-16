@@ -19,8 +19,9 @@ interface CalendarGridProps {
     currentDate: Date;
     view: 'month' | 'week';
     activities: Activity[];
-    onDayClick: (date: string) => void;
+    onDateClick: (date: string) => void;
     onActivityClick: (activity: Activity) => void;
+    onActivityDrop?: (activityId: string, newDate: string) => void;
     selectedDate?: string;
 }
 
@@ -28,11 +29,13 @@ export function CalendarGrid({
     currentDate,
     view,
     activities,
-    onDayClick,
+    onDateClick,
     onActivityClick,
+    onActivityDrop,
     selectedDate
 }: CalendarGridProps) {
     const [calendarDays, setCalendarDays] = useState<Date[]>([]);
+    const [draggedActivity, setDraggedActivity] = useState<Activity | null>(null);
 
     useEffect(() => {
         if (view === 'month') {
@@ -107,6 +110,32 @@ export function CalendarGrid({
         return `${displayHour}:${minutes} ${ampm}`;
     };
 
+    const handleDragStart = (e: React.DragEvent, activity: Activity) => {
+        setDraggedActivity(activity);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', activity.id);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e: React.DragEvent, date: Date) => {
+        e.preventDefault();
+        if (draggedActivity && onActivityDrop) {
+            const newDateString = date.toISOString().split('T')[0];
+            if (newDateString !== draggedActivity.date) {
+                onActivityDrop(draggedActivity.id, newDateString);
+            }
+        }
+        setDraggedActivity(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedActivity(null);
+    };
+
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     if (view === 'week') {
@@ -116,12 +145,12 @@ export function CalendarGrid({
                 <div className="grid grid-cols-7 border-b border-border">
                     {calendarDays.map((day, index) => (
                         <div key={index} className="p-4 text-center border-r border-border last:border-r-0">
-                            <div className="text-sm font-medium text-muted-foreground">
+                            <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {weekDays[day.getDay()]}
                             </div>
                             <div className={`text-2xl font-bold mt-1 ${isToday(day)
                                 ? 'text-blue-600 dark:text-blue-400'
-                                : 'text-gray-900 dark:text-white'
+                                : 'text-gray-900 dark:text-gray-100'
                                 }`}>
                                 {day.getDate()}
                             </div>
@@ -138,25 +167,31 @@ export function CalendarGrid({
                         return (
                             <div
                                 key={index}
-                                className={`p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${isSelectedDate(day) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                                className={`p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors ${isSelectedDate(day) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                                     }`}
-                                onClick={() => onDayClick(dateString)}
+                                onClick={() => onDateClick(dateString)}
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, day)}
                             >
                                 <div className="space-y-1">
                                     {dayActivities.map((activity) => (
                                         <div
                                             key={activity.id}
-                                            className="p-2 rounded-lg text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                                            className={`p-2 rounded-lg text-xs cursor-pointer hover:opacity-80 transition-opacity ${draggedActivity?.id === activity.id ? 'opacity-50' : ''
+                                                }`}
                                             style={{ backgroundColor: activity.color + '20', borderLeft: `3px solid ${activity.color}` }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onActivityClick(activity);
                                             }}
+                                            draggable
+                                            onDragStart={(e) => handleDragStart(e, activity)}
+                                            onDragEnd={handleDragEnd}
                                         >
-                                            <div className="font-medium text-gray-900 dark:text-white truncate">
+                                            <div className="font-medium text-gray-900 dark:text-gray-100 truncate">
                                                 {activity.title}
                                             </div>
-                                            <div className="text-gray-600 dark:text-gray-400">
+                                            <div className="text-sm text-gray-600 dark:text-gray-300">
                                                 {formatTime(activity.startTime)} - {formatTime(activity.endTime)}
                                             </div>
                                         </div>
@@ -177,7 +212,7 @@ export function CalendarGrid({
             <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
                 {weekDays.map((day) => (
                     <div key={day} className="p-4 text-center border-r border-gray-200 dark:border-gray-700 last:border-r-0">
-                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
                             {day}
                         </div>
                     </div>
@@ -193,16 +228,18 @@ export function CalendarGrid({
                     return (
                         <div
                             key={index}
-                            className={`min-h-[120px] p-2 border-r border-b border-gray-200 dark:border-gray-700 last:border-r-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${!isCurrentMonth(day) ? 'bg-gray-50 dark:bg-gray-900/50' : ''
+                            className={`min-h-[120px] p-2 border-r border-b border-gray-200 dark:border-gray-700 last:border-r-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors ${!isCurrentMonth(day) ? 'bg-gray-50 dark:bg-gray-900/50' : ''
                                 } ${isSelectedDate(day) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                                 }`}
-                            onClick={() => onDayClick(dateString)}
+                            onClick={() => onDateClick(dateString)}
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, day)}
                         >
                             <div className={`text-sm font-medium mb-1 ${isToday(day)
                                 ? 'text-blue-600 dark:text-blue-400'
                                 : !isCurrentMonth(day)
                                     ? 'text-gray-400 dark:text-gray-600'
-                                    : 'text-gray-900 dark:text-white'
+                                    : 'text-gray-900 dark:text-gray-100'
                                 }`}>
                                 {day.getDate()}
                             </div>
@@ -211,17 +248,21 @@ export function CalendarGrid({
                                 {dayActivities.slice(0, 3).map((activity) => (
                                     <div
                                         key={activity.id}
-                                        className="p-1 rounded text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                                        className={`p-1 rounded text-xs cursor-pointer hover:opacity-80 transition-opacity ${draggedActivity?.id === activity.id ? 'opacity-50' : ''
+                                            }`}
                                         style={{ backgroundColor: activity.color + '20', borderLeft: `2px solid ${activity.color}` }}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             onActivityClick(activity);
                                         }}
+                                        draggable
+                                        onDragStart={(e) => handleDragStart(e, activity)}
+                                        onDragEnd={handleDragEnd}
                                     >
-                                        <div className="font-medium text-gray-900 dark:text-white truncate">
+                                        <div className="font-medium text-gray-900 dark:text-gray-100 truncate">
                                             {activity.title}
                                         </div>
-                                        <div className="text-gray-600 dark:text-gray-400">
+                                        <div className="text-xs text-gray-600 dark:text-gray-300">
                                             {formatTime(activity.startTime)}
                                         </div>
                                     </div>

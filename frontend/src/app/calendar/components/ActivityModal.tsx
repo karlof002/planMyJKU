@@ -37,7 +37,11 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
 
     const predefinedColors = [
         '#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6',
-        '#f97316', '#06b6d4', '#84cc16', '#ec4899', '#6366f1'
+        '#f97316', '#06b6d4', '#84cc16', '#ec4899', '#6366f1',
+        '#14b8a6', '#f43f5e', '#a855f7', '#3b82f6', '#64748b',
+        '#dc2626', '#ea580c', '#ca8a04', '#16a34a', '#2563eb',
+        '#7c3aed', '#059669', '#0891b2', '#be123c', '#9333ea',
+        '#0d9488', '#c2410c', '#facc15', '#4ade80', '#60a5fa'
     ];
 
     useEffect(() => {
@@ -79,44 +83,43 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-card rounded-2xl p-6 w-full max-w-md border border-border">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div className="bg-card rounded-2xl p-6 w-full max-w-md border border-border" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold text-card-foreground">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                         {activity ? 'Edit Activity' : 'Add Activity'}
                     </h2>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-muted rounded-lg transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                        <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-2">
-                            Title
-                        </label>
+                    <div>                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                        Title
+                    </label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                            className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground"
+                            className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-2">
+                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                             Description
                         </label>
                         <textarea
                             value={formData.description}
                             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                            className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground"
+                            className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
                             rows={3}
                         />
                     </div>
@@ -199,11 +202,12 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
 
                         {showColorPicker && (
                             <div className="mt-2 p-2 bg-background border border-border rounded-lg">
-                                <div className="grid grid-cols-5 gap-2">
+                                <div className="grid grid-cols-10 gap-2">
                                     {predefinedColors.map(color => (
                                         <div
                                             key={color}
-                                            className="w-8 h-8 rounded-lg cursor-pointer border-2 border-border hover:scale-110 transition-transform"
+                                            className={`w-8 h-8 rounded-lg cursor-pointer border-2 hover:scale-110 transition-transform ${formData.color === color ? 'border-foreground scale-110' : 'border-border'
+                                                }`}
                                             style={{ backgroundColor: color }}
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, color }));
@@ -233,7 +237,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-card-foreground"
+                                className="px-4 py-2 border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-card-foreground"
                             >
                                 Cancel
                             </button>

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '../../lib/db';
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,7 +10,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
         }
 
-        const templates = await prisma.template.findMany({
+        const templates = await db.template.findMany({
             where: { userId },
             orderBy: { createdAt: 'desc' }
         });
@@ -27,20 +25,18 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { userId, name, title, description, startTime, endTime, type, color } = body;
+        const { userId, name, title, description, type, color } = body;
 
         if (!userId || !name || !title || !type) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const template = await prisma.template.create({
+        const template = await db.template.create({
             data: {
                 userId,
                 name,
                 title,
                 description: description || '',
-                startTime,
-                endTime: endTime || startTime,
                 type,
                 color: color || '#3b82f6'
             }
@@ -62,7 +58,7 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: 'Template ID is required' }, { status: 400 });
         }
 
-        await prisma.template.delete({
+        await db.template.delete({
             where: { id }
         });
 
