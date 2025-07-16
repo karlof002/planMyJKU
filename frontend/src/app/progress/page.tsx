@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { Navigation } from "../components/Navigation";
 
 interface User {
     id: string;
@@ -175,26 +175,14 @@ export default function ProgressPage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center space-x-4">
-                            <h1 className="text-2xl font-bold">Progress Tracking</h1>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <ThemeToggle />
-                            <button
-                                onClick={() => router.push('/dashboard')}
-                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                            >
-                                Dashboard
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <Navigation />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Progress Tracking</h1>
+                    <p className="text-foreground/60">Monitor your academic progress and achievements</p>
+                </div>
+
                 {/* Overall Progress */}
                 <div className="mb-8">
                     <h2 className="text-xl font-semibold mb-4">Overall Progress</h2>
@@ -247,8 +235,8 @@ export default function ProgressPage() {
                             <button
                                 onClick={() => setFilter('all')}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filter === 'all'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                                     }`}
                             >
                                 All ({stats.totalCourses})
@@ -256,8 +244,8 @@ export default function ProgressPage() {
                             <button
                                 onClick={() => setFilter('completed')}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filter === 'completed'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                                     }`}
                             >
                                 Completed ({stats.completedCourses})
@@ -265,8 +253,8 @@ export default function ProgressPage() {
                             <button
                                 onClick={() => setFilter('enrolled')}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filter === 'enrolled'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                                     }`}
                             >
                                 Enrolled ({stats.enrolledCourses})
@@ -274,8 +262,8 @@ export default function ProgressPage() {
                             <button
                                 onClick={() => setFilter('planned')}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filter === 'planned'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                                     }`}
                             >
                                 Planned ({stats.plannedCourses})

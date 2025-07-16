@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { Navigation } from "../components/Navigation";
 
 interface User {
     id: string;
@@ -119,30 +119,14 @@ export default function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center space-x-4">
-                            <h1 className="text-2xl font-bold">planMyJKU</h1>
-                            <span className="text-sm text-foreground/60">Dashboard</span>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <ThemeToggle />
-                            <span className="text-sm text-foreground/80">
-                                Welcome, {user?.firstName} {user?.lastName}
-                            </span>
-                            <button
-                                onClick={logout}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <Navigation />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+                    <p className="text-foreground/60">Welcome back! Here's your study progress overview</p>
+                </div>
+
                 {/* Stats Overview */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="bg-card border border-border rounded-lg p-6">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Navigation } from "../components/Navigation";
 
 interface Course {
     id: string;
@@ -121,25 +122,14 @@ export default function CoursesPage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b border-border">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center space-x-4">
-                            <h1 className="text-2xl font-bold">Course Catalog</h1>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <button
-                                onClick={() => router.push('/dashboard')}
-                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                            >
-                                Back to Dashboard
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <Navigation />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Course Catalog</h1>
+                    <p className="text-foreground/60">Browse and add courses to your study plan</p>
+                </div>
+
                 {/* Search and Filters */}
                 <div className="mb-8 space-y-4">
                     <div className="flex flex-col md:flex-row gap-4">

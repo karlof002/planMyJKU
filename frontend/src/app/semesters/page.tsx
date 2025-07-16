@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { Navigation } from "../components/Navigation";
 
 interface User {
     id: string;
@@ -126,26 +126,13 @@ export default function SemestersPage() {
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center space-x-4">
-                            <h1 className="text-2xl font-bold">Semester Planning</h1>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <ThemeToggle />
-                            <button
-                                onClick={() => router.push('/dashboard')}
-                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                            >
-                                Dashboard
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <Navigation />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Semester Planning</h1>
+                    <p className="text-foreground/60">Plan and organize your courses by semester</p>
+                </div>
                 <div className="mb-8 flex justify-between items-center">
                     <h2 className="text-xl font-semibold">Your Semesters</h2>
                     <button

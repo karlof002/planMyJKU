@@ -1,79 +1,138 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --muted: #f5f5f5;
-  --border: #e5e5e5;
-  --input: #ffffff;
-  --primary: #000000;
-  --primary-foreground: #ffffff;
-  --secondary: #f5f5f5;
-  --secondary-foreground: #000000;
-  --accent: #f5f5f5;
-  --accent-foreground: #000000;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* Custom theme variables */
+@layer base {
   :root {
-    --background: #000000;
-    --foreground: #ffffff;
-    --muted: #0a0a0a;
-    --border: #262626;
-    --input: #0a0a0a;
-    --primary: #ffffff;
-    --primary-foreground: #000000;
-    --secondary: #0a0a0a;
-    --secondary-foreground: #ffffff;
-    --accent: #0a0a0a;
-    --accent-foreground: #ffffff;
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff;
+    --background: 255 255 255;
+    --foreground: 0 0 0;
+    --muted: 245 245 245;
+    --border: 229 229 229;
+    --input: 255 255 255;
+    --primary: 0 0 0;
+    --primary-foreground: 255 255 255;
+    --secondary: 245 245 245;
+    --secondary-foreground: 0 0 0;
+    --accent: 245 245 245;
+    --accent-foreground: 0 0 0;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --card: 255 255 255;
+    --card-foreground: 0 0 0;
+  }
+
+  .dark {
+    --background: 0 0 0;
+    --foreground: 255 255 255;
+    --muted: 10 10 10;
+    --border: 38 38 38;
+    --input: 10 10 10;
+    --primary: 255 255 255;
+    --primary-foreground: 0 0 0;
+    --secondary: 10 10 10;
+    --secondary-foreground: 255 255 255;
+    --accent: 10 10 10;
+    --accent-foreground: 255 255 255;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --card: 10 10 10;
+    --card-foreground: 255 255 255;
   }
 }
 
-.dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --muted: #0a0a0a;
-  --border: #262626;
-  --input: #0a0a0a;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --secondary: #0a0a0a;
-  --secondary-foreground: #ffffff;
-  --accent: #0a0a0a;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-}
+@layer utilities {
+  .bg-background {
+    background-color: rgb(var(--background));
+  }
 
-* {
-  border-color: var(--border);
-}
+  .text-foreground {
+    color: rgb(var(--foreground));
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  .bg-card {
+    background-color: rgb(var(--card));
+  }
+
+  .text-card-foreground {
+    color: rgb(var(--card-foreground));
+  }
+
+  .bg-primary {
+    background-color: rgb(var(--primary));
+  }
+
+  .text-primary {
+    color: rgb(var(--primary));
+  }
+
+  .text-primary-foreground {
+    color: rgb(var(--primary-foreground));
+  }
+
+  .bg-secondary {
+    background-color: rgb(var(--secondary));
+  }
+
+  .text-secondary-foreground {
+    color: rgb(var(--secondary-foreground));
+  }
+
+  .border-border {
+    border-color: rgb(var(--border));
+  }
+
+  .bg-muted {
+    background-color: rgb(var(--muted));
+  }
+
+  .bg-input {
+    background-color: rgb(var(--input));
+  }
+
+  .bg-destructive {
+    background-color: rgb(var(--destructive));
+  }
+
+  .text-destructive {
+    color: rgb(var(--destructive));
+  }
+
+  .text-destructive-foreground {
+    color: rgb(var(--destructive-foreground));
+  }
+
+  .text-foreground\/60 {
+    color: rgb(var(--foreground) / 0.6);
+  }
+
+  .text-foreground\/70 {
+    color: rgb(var(--foreground) / 0.7);
+  }
+
+  .text-foreground\/80 {
+    color: rgb(var(--foreground) / 0.8);
+  }
+
+  .bg-primary\/90 {
+    background-color: rgb(var(--primary) / 0.9);
+  }
+
+  .bg-secondary\/80 {
+    background-color: rgb(var(--secondary) / 0.8);
+  }
+
+  .bg-secondary\/50 {
+    background-color: rgb(var(--secondary) / 0.5);
+  }
+
+  .bg-destructive\/90 {
+    background-color: rgb(var(--destructive) / 0.9);
+  }
+
+  .bg-background\/95 {
+    background-color: rgb(var(--background) / 0.95);
+  }
+
+  .bg-background\/60 {
+    background-color: rgb(var(--background) / 0.6);
+  }
 }
