@@ -2,17 +2,48 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const message = searchParams.get("message");
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Implement login logic
-        console.log("Login attempt:", formData);
+        setError("");
+        setIsLoading(true);
+
+        try {
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // TODO: Handle successful login (e.g., store user data, redirect)
+                console.log("Login successful:", data.user);
+                // For now, redirect to home page
+                router.push("/");
+            } else {
+                setError(data.error || "Login failed");
+            }
+        } catch (error) {
+            setError("An error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +64,18 @@ export default function LoginPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {message && (
+                        <div className="bg-primary/10 border border-primary/20 text-primary px-4 py-3 rounded-md text-sm">
+                            {message}
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md text-sm">
+                            {error}
+                        </div>
+                    )}
+
                     <div className="space-y-4">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium mb-2">
@@ -43,9 +86,10 @@ export default function LoginPage() {
                                 name="email"
                                 type="email"
                                 required
+                                disabled={isLoading}
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50"
                                 placeholder="Enter your email"
                             />
                         </div>
@@ -59,9 +103,10 @@ export default function LoginPage() {
                                 name="password"
                                 type="password"
                                 required
+                                disabled={isLoading}
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50"
                                 placeholder="Enter your password"
                             />
                         </div>
@@ -69,9 +114,10 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
-                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 px-4 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+                        disabled={isLoading}
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed rounded-md py-2 px-4 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
                     >
-                        Sign In
+                        {isLoading ? "Signing In..." : "Sign In"}
                     </button>
 
                     <div className="text-center">
