@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 interface User {
     id: string;
@@ -12,25 +13,97 @@ interface User {
     isVerified: boolean;
 }
 
+interface UserCourse {
+    id: string;
+    status: string;
+    grade?: number;
+    ects?: number;
+    course: {
+        id: string;
+        courseCode: string;
+        title: string;
+        ects: number;
+    };
+}
+
+interface Stats {
+    totalCourses: number;
+    completedCourses: number;
+    enrolledCourses: number;
+    plannedCourses: number;
+    totalECTS: number;
+    currentGPA: number;
+    coursesByStatus: {
+        completed: number;
+        enrolled: number;
+        planned: number;
+    };
+}
+
 export default function DashboardPage() {
     const [user, setUser] = useState<User | null>(null);
+    const [userCourses, setUserCourses] = useState<UserCourse[]>([]);
+    const [stats, setStats] = useState<Stats>({
+        totalCourses: 0,
+        completedCourses: 0,
+        enrolledCourses: 0,
+        plannedCourses: 0,
+        totalECTS: 0,
+        currentGPA: 0,
+        coursesByStatus: {
+            completed: 0,
+            enrolled: 0,
+            planned: 0
+        }
+    });
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        // Check if user is logged in (you'll need to implement session management)
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
+            fetchUserData(JSON.parse(storedUser).id);
         } else {
             router.push('/auth/login');
         }
-        setIsLoading(false);
     }, [router]);
 
-    const handleLogout = () => {
+    const fetchUserData = async (userId: string) => {
+        try {
+            const [coursesResponse, statsResponse] = await Promise.all([
+                fetch(`/api/user/courses?userId=${userId}`),
+                fetch(`/api/user/stats?userId=${userId}`)
+            ]);
+
+            const coursesData = await coursesResponse.json();
+            const statsData = await statsResponse.json();
+
+            setUserCourses(coursesData);
+            setStats(statsData);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'completed':
+                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+            case 'enrolled':
+                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+            case 'planned':
+                return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+            default:
+                return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+        }
+    };
+
+    const logout = () => {
         localStorage.removeItem('user');
-        router.push('/');
+        router.push('/auth/login');
     };
 
     if (isLoading) {
@@ -38,19 +111,15 @@ export default function DashboardPage() {
             <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p>Loading...</p>
+                    <p>Loading dashboard...</p>
                 </div>
             </div>
         );
     }
 
-    if (!user) {
-        return null;
-    }
-
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b border-border">
+            <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-4">
                         <div className="flex items-center space-x-4">
@@ -58,12 +127,13 @@ export default function DashboardPage() {
                             <span className="text-sm text-foreground/60">Dashboard</span>
                         </div>
                         <div className="flex items-center space-x-4">
+                            <ThemeToggle />
                             <span className="text-sm text-foreground/80">
-                                Welcome, {user.firstName}!
+                                Welcome, {user?.firstName} {user?.lastName}
                             </span>
                             <button
-                                onClick={handleLogout}
-                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                onClick={logout}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
                             >
                                 Logout
                             </button>
@@ -73,109 +143,110 @@ export default function DashboardPage() {
             </header>
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* User Profile Card */}
-                    <div className="bg-secondary/50 rounded-lg p-6">
-                        <h2 className="text-lg font-semibold mb-4">Profile</h2>
-                        <div className="space-y-3">
+                {/* Stats Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div className="bg-card border border-border rounded-lg p-6">
+                        <div className="flex items-center justify-between">
                             <div>
-                                <label className="text-sm font-medium text-foreground/70">Name</label>
-                                <p className="text-foreground">{user.firstName} {user.lastName}</p>
+                                <p className="text-sm font-medium text-foreground/70">Total Courses</p>
+                                <p className="text-2xl font-bold text-primary">{stats.totalCourses}</p>
                             </div>
-                            <div>
-                                <label className="text-sm font-medium text-foreground/70">Email</label>
-                                <p className="text-foreground">{user.email}</p>
-                            </div>
-                            {user.studentId && (
-                                <div>
-                                    <label className="text-sm font-medium text-foreground/70">Student ID</label>
-                                    <p className="text-foreground">{user.studentId}</p>
-                                </div>
-                            )}
-                            <div>
-                                <label className="text-sm font-medium text-foreground/70">Status</label>
-                                <p className="text-foreground flex items-center">
-                                    {user.isVerified ? (
-                                        <>
-                                            <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                            Verified
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                                            Unverified
-                                        </>
-                                    )}
-                                </p>
-                            </div>
+                            <div className="text-primary text-3xl">📚</div>
                         </div>
                     </div>
 
-                    {/* Quick Actions */}
-                    <div className="bg-secondary/50 rounded-lg p-6">
-                        <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-                        <div className="space-y-3">
-                            <button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                Plan Semester
-                            </button>
-                            <button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                View Courses
-                            </button>
-                            <button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                Track Progress
-                            </button>
+                    <div className="bg-card border border-border rounded-lg p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-foreground/70">Completed</p>
+                                <p className="text-2xl font-bold text-green-600">{stats.completedCourses}</p>
+                            </div>
+                            <div className="text-green-600 text-3xl">✅</div>
                         </div>
                     </div>
 
-                    {/* Statistics */}
-                    <div className="bg-secondary/50 rounded-lg p-6">
-                        <h2 className="text-lg font-semibold mb-4">Statistics</h2>
-                        <div className="space-y-3">
-                            <div className="flex justify-between">
-                                <span className="text-foreground/70">Completed Courses</span>
-                                <span className="font-medium">0</span>
+                    <div className="bg-card border border-border rounded-lg p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-foreground/70">Total ECTS</p>
+                                <p className="text-2xl font-bold text-blue-600">{stats.totalECTS}</p>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-foreground/70">ECTS Earned</span>
-                                <span className="font-medium">0</span>
+                            <div className="text-blue-600 text-3xl">🎓</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-card border border-border rounded-lg p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-foreground/70">Current GPA</p>
+                                <p className="text-2xl font-bold text-purple-600">{stats.currentGPA}</p>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-foreground/70">Current GPA</span>
-                                <span className="font-medium">-</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-foreground/70">Semester</span>
-                                <span className="font-medium">1</span>
-                            </div>
+                            <div className="text-purple-600 text-3xl">📊</div>
                         </div>
                     </div>
                 </div>
 
-                {/* Coming Soon Features */}
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-6">Coming Soon</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="bg-muted/50 rounded-lg p-4 text-center">
-                            <div className="text-2xl mb-2">📅</div>
-                            <h3 className="font-medium">Semester Planning</h3>
-                            <p className="text-sm text-foreground/60 mt-2">Plan your courses by semester</p>
-                        </div>
-                        <div className="bg-muted/50 rounded-lg p-4 text-center">
-                            <div className="text-2xl mb-2">📚</div>
-                            <h3 className="font-medium">Course Catalog</h3>
-                            <p className="text-sm text-foreground/60 mt-2">Browse available courses</p>
-                        </div>
-                        <div className="bg-muted/50 rounded-lg p-4 text-center">
-                            <div className="text-2xl mb-2">📊</div>
-                            <h3 className="font-medium">Progress Tracking</h3>
-                            <p className="text-sm text-foreground/60 mt-2">Monitor your progress</p>
-                        </div>
-                        <div className="bg-muted/50 rounded-lg p-4 text-center">
-                            <div className="text-2xl mb-2">⏰</div>
-                            <h3 className="font-medium">Scheduling</h3>
-                            <p className="text-sm text-foreground/60 mt-2">Manage your schedule</p>
-                        </div>
+                {/* Quick Actions */}
+                <div className="bg-card border border-border rounded-lg p-6 mb-8">
+                    <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+                    <div className="flex flex-wrap gap-4">
+                        <button
+                            onClick={() => router.push('/semesters')}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium transition-colors"
+                        >
+                            Plan Semester
+                        </button>
+                        <button
+                            onClick={() => router.push('/progress')}
+                            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium transition-colors"
+                        >
+                            Track Progress
+                        </button>
+                        <button
+                            onClick={() => router.push('/courses')}
+                            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium transition-colors"
+                        >
+                            Browse Courses
+                        </button>
                     </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="bg-card border border-border rounded-lg p-6">
+                    <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+                    <div className="space-y-4">
+                        {userCourses.slice(0, 5).map((userCourse) => (
+                            <div key={userCourse.id} className="flex items-center justify-between py-3 border-b border-border last:border-b-0">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                    <div>
+                                        <p className="font-medium">{userCourse.course.courseCode}</p>
+                                        <p className="text-sm text-foreground/70">{userCourse.course.title}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <span className={`px-2 py-1 rounded text-xs ${getStatusColor(userCourse.status)}`}>
+                                        {userCourse.status}
+                                    </span>
+                                    <span className="text-sm text-foreground/70">{userCourse.course.ects} ECTS</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {userCourses.length === 0 && (
+                        <div className="text-center py-8">
+                            <div className="text-6xl mb-4">📚</div>
+                            <h3 className="text-lg font-semibold mb-2">No courses yet</h3>
+                            <p className="text-foreground/60 mb-4">Start by browsing available courses and adding them to your plan</p>
+                            <button
+                                onClick={() => router.push('/courses')}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium transition-colors"
+                            >
+                                Browse Courses
+                            </button>
+                        </div>
+                    )}
                 </div>
             </main>
         </div>

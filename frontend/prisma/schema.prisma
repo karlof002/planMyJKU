@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,6 +21,10 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  // Relations
+  enrolledCourses UserCourse[]
+  semesters       Semester[]
+
   @@map("users")
 }
 
@@ -35,4 +36,76 @@ model EmailVerification {
   createdAt DateTime @default(now())
 
   @@map("email_verifications")
+}
+
+model Course {
+  id            String   @id @default(cuid())
+  courseCode    String   @unique // e.g., "326.081"
+  title         String
+  description   String?
+  ects          Float
+  semester      String   // "WS" or "SS"
+  faculty       String
+  department    String?
+  prerequisites String[] // Array of course codes
+  language      String   @default("German")
+  courseType    String   // "VO", "UE", "VU", "SE", "PR", etc.
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  userCourses   UserCourse[]
+  semesterCourses SemesterCourse[]
+
+  @@map("courses")
+}
+
+model Semester {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String   // e.g., "WS 2024/25"
+  year      Int      // e.g., 2024
+  type      String   // "WS" or "SS"
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses   SemesterCourse[]
+
+  @@map("semesters")
+}
+
+model UserCourse {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  status    String   // "planned", "enrolled", "completed", "failed"
+  grade     Float?   // 1-5 scale
+  ects      Float?   // ECTS earned (might be different from course ECTS)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("user_courses")
+}
+
+model SemesterCourse {
+  id         String   @id @default(cuid())
+  semesterId String
+  courseId   String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([semesterId, courseId])
+  @@map("semester_courses")
 }
