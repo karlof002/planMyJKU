@@ -30,6 +30,14 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // Check if email is verified
+        if (!user.isVerified) {
+            return NextResponse.json(
+                { error: 'Please verify your email before logging in', needsVerification: true },
+                { status: 401 }
+            )
+        }
+
         // Return user data (excluding password)
         const { password: _, ...userWithoutPassword } = user
 

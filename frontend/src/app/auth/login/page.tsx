@@ -32,12 +32,15 @@ export default function LoginPage() {
             const data = await response.json();
 
             if (response.ok) {
-                // TODO: Handle successful login (e.g., store user data, redirect)
-                console.log("Login successful:", data.user);
-                // For now, redirect to home page
-                router.push("/");
+                // Store user data in localStorage (in production, use proper session management)
+                localStorage.setItem('user', JSON.stringify(data.user));
+                router.push("/dashboard");
             } else {
-                setError(data.error || "Login failed");
+                if (data.needsVerification) {
+                    router.push(`/auth/verify?email=${encodeURIComponent(formData.email)}`);
+                } else {
+                    setError(data.error || "Login failed");
+                }
             }
         } catch (error) {
             setError("An error occurred. Please try again.");
