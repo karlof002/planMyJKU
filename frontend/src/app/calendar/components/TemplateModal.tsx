@@ -154,13 +154,13 @@ export default function TemplateModal({
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-card-foreground mb-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
                                     Description
                                 </label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                    className="w-full px-4 py-3 border border-border rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                                     rows={3}
                                     placeholder="Template description..."
                                 />
@@ -218,7 +218,7 @@ export default function TemplateModal({
                                 <button
                                     type="button"
                                     onClick={handleCancel}
-                                    className="px-6 py-2 border border-border rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-card-foreground transition-colors"
+                                    className="px-6 py-2 border border-border rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -273,19 +273,19 @@ export default function TemplateModal({
                                                         style={{ backgroundColor: template.color }}
                                                     />
                                                     <div>
-                                                        <div className="font-medium text-foreground">{template.name}</div>                                        <div className="text-sm text-gray-600 dark:text-gray-300">
-                                            {template.title} • {template.type}
-                                        </div>
-                                                        {template.description && (                                            <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                                {template.description}
-                                            </div>
+                                                        <div className="font-medium text-gray-900 dark:text-gray-100">{template.name}</div>                                        <div className="text-sm text-gray-600 dark:text-gray-300">
+                                                            {template.title} • {template.type}
+                                                        </div>
+                                                        {template.description && (<div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                                            {template.description}
+                                                        </div>
                                                         )}
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <button
                                                         onClick={() => handleEditTemplate(template)}
-                                                        className="px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-card-foreground transition-colors"
+                                                        className="px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors"
                                                     >
                                                         Edit
                                                     </button>

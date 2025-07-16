@@ -237,7 +237,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2 border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-card-foreground"
+                                className="px-4 py-2 border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-900 dark:text-gray-100"
                             >
                                 Cancel
                             </button>
