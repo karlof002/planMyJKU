@@ -32,7 +32,7 @@ async function testGMXEmail() {
         console.log('Sending test email...');
         const info = await transporter.sendMail({
             from: `"planMyJKU Test" <${process.env.SMTP_FROM}>`,
-            to: process.env.SMTP_USER, // Send to yourself
+            to: "karlof04gamer@gmail.com", // Send to yourself
             subject: 'Test Email from planMyJKU',
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px;">
