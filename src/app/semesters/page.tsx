@@ -112,7 +112,7 @@ export default function SemestersPage() {
     };
 
     const getSemesterTypeColor = (type: string) => {
-        return type === 'WS' ? 'bg-indigo-600 text-white dark:bg-blue-900/30 dark:text-blue-300' : 'bg-amber-600 text-white dark:bg-orange-900/30 dark:text-orange-300';
+        return type === 'WS' ? 'bg-indigo-600 text-white dark:bg-indigo-800 dark:text-white' : 'bg-amber-600 text-white dark:bg-amber-800 dark:text-white';
     }; if (isLoading) {
         return (
             <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
@@ -218,7 +218,7 @@ export default function SemestersPage() {
                                         {semester.type}
                                     </span>
                                     {semester.isActive && (
-                                        <span className="px-3 py-1 rounded-full text-xs bg-green-600 text-white dark:bg-green-500/20 dark:text-green-400 font-medium border border-green-600 dark:border-green-500/30">
+                                        <span className="px-3 py-1 rounded-full text-xs bg-green-600 text-white dark:bg-green-800 dark:text-white font-medium border border-green-600 dark:border-green-800">
                                             Active
                                         </span>
                                     )}
@@ -244,17 +244,17 @@ export default function SemestersPage() {
                                                     <div className="flex items-center gap-2">
                                                         <span className="font-mono font-semibold text-foreground">{sc.course.courseCode}</span>
                                                         {sc.course.isSteopRequired && (
-                                                            <span className="px-2 py-0.5 rounded text-[10px] bg-red-600 text-white dark:bg-destructive/20 dark:text-destructive font-medium border border-red-600 dark:border-destructive/30">
+                                                            <span className="px-2 py-0.5 rounded text-[10px] bg-red-600 text-white dark:bg-red-800 dark:text-white font-medium border border-red-600 dark:border-red-800">
                                                                 StEOP Pflicht
                                                             </span>
                                                         )}
                                                         {sc.course.isSteopAllowed && !sc.course.isSteopRequired && (
-                                                            <span className="px-2 py-0.5 rounded text-[10px] bg-green-600 text-white dark:bg-green-500/20 dark:text-green-400 font-medium border border-green-600 dark:border-green-500/30">
+                                                            <span className="px-2 py-0.5 rounded text-[10px] bg-green-600 text-white dark:bg-green-800 dark:text-white font-medium border border-green-600 dark:border-green-800">
                                                                 StEOP erlaubt
                                                             </span>
                                                         )}
                                                         {!sc.course.isSteopRequired && !sc.course.isSteopAllowed && (
-                                                            <span className="px-2 py-0.5 rounded text-[10px] bg-gray-600 text-white dark:bg-muted dark:text-muted-foreground border border-gray-600 dark:border-border">
+                                                            <span className="px-2 py-0.5 rounded text-[10px] bg-gray-600 text-white dark:bg-gray-700 dark:text-white border border-gray-600 dark:border-gray-700">
                                                                 Nach StEOP
                                                             </span>
                                                         )}
