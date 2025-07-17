@@ -526,7 +526,7 @@ export default function CalendarPage() {
                                                 {activities.filter(activity => activity.date === selectedDate).map((activity) => (
                                                     <div
                                                         key={activity.id}
-                                                        className="flex items-center gap-3 p-3 bg-background border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                                                        className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
                                                         onClick={() => {
                                                             setEditingActivity(activity);
                                                             setIsModalOpen(true);
