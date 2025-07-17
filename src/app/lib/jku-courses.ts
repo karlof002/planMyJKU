@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { getSteopStatus } from './steop-mapping';
 
 interface Course {
   courseCode: string;
@@ -10,6 +11,8 @@ interface Course {
   faculty: string;
   department?: string;
   language: string;
+  isSteopRequired?: boolean; // StEOP Pflicht (5 ECTS erforderlich)
+  isSteopAllowed?: boolean;  // Kann vor StEOP-Abschluss absolviert werden
 }
 
 // JKU Informatik Kurse scraper
@@ -40,11 +43,20 @@ export async function scrapeJKUInformatikCourses(): Promise<Course[]> {
   return courses;
 }
 
+// Hilfsfunktion um einen Kurs mit StEOP-Status zu erstellen
+function createCourse(courseData: Omit<Course, 'isSteopRequired' | 'isSteopAllowed'>): Course {
+  const steopStatus = getSteopStatus(courseData.courseCode);
+  return {
+    ...courseData,
+    ...steopStatus
+  };
+}
+
 // Echte JKU Informatik-Kurse basierend auf dem offiziellen Studienplan
 export function getJKUInformatikCourses(): Course[] {
   return [
-    // Propädeutikum
-    {
+    // Propädeutikum - StEOP zugelassen
+    createCourse({
       courseCode: "KV.PROP",
       title: "Propädeutikum",
       ects: 1.5,
@@ -54,10 +66,10 @@ export function getJKUInformatikCourses(): Course[] {
       faculty: "Informatik",
       department: "TNF",
       language: "Deutsch"
-    },
+    }),
 
     // Theorie (36 ECTS)
-    {
+    createCourse({
       courseCode: "UE.ALGEBRA",
       title: "Algebra für Informatik",
       ects: 3,
@@ -67,8 +79,8 @@ export function getJKUInformatikCourses(): Course[] {
       faculty: "Informatik",
       department: "TNF",
       language: "Deutsch"
-    },
-    {
+    }),
+    createCourse({
       courseCode: "VL.ALGEBRA",
       title: "Algebra für Informatik",
       ects: 3,
@@ -78,7 +90,7 @@ export function getJKUInformatikCourses(): Course[] {
       faculty: "Informatik",
       department: "TNF",
       language: "Deutsch"
-    },
+    }),
     {
       courseCode: "UE.ANALYSIS",
       title: "Analysis für Informatik",
@@ -88,7 +100,8 @@ export function getJKUInformatikCourses(): Course[] {
       description: "Übungen zur Analysis für Informatik",
       faculty: "Informatik",
       department: "TNF",
-      language: "Deutsch"
+      language: "Deutsch",
+      isSteopAllowed: true
     },
     {
       courseCode: "VL.ANALYSIS",
@@ -99,7 +112,8 @@ export function getJKUInformatikCourses(): Course[] {
       description: "Mathematische Analysis für Informatiker",
       faculty: "Informatik",
       department: "TNF",
-      language: "Deutsch"
+      language: "Deutsch",
+      isSteopAllowed: true
     },
     {
       courseCode: "UE.BERECHENB",

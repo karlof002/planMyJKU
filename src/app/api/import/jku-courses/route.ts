@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
                         prerequisites: [], // Kann später erweitert werden
                         language: courseData.language,
                         courseType: courseData.courseType,
-                        isActive: true
+                        isActive: true,
+                        isSteopRequired: courseData.isSteopRequired || false,
+                        isSteopAllowed: courseData.isSteopAllowed || false
                     }
                 })
 
