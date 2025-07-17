@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
 
         let importedCount = 0
         let skippedCount = 0
+        let updatedCount = 0
 
         for (const courseData of jkuCourses) {
             try {
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
                 })
 
                 if (existingCourse) {
+                    // Überspringe bestehende Kurse für jetzt
                     skippedCount++
                     continue
                 }
@@ -46,9 +48,7 @@ export async function POST(request: NextRequest) {
                         prerequisites: [], // Kann später erweitert werden
                         language: courseData.language,
                         courseType: courseData.courseType,
-                        isActive: true,
-                        isSteopRequired: courseData.isSteopRequired || false,
-                        isSteopAllowed: courseData.isSteopAllowed || false
+                        isActive: true
                     }
                 })
 
