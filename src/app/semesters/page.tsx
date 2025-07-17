@@ -112,7 +112,7 @@ export default function SemestersPage() {
     };
 
     const getSemesterTypeColor = (type: string) => {
-        return type === 'WS' ? 'bg-blue-600 text-white dark:bg-blue-900/30 dark:text-blue-300' : 'bg-orange-600 text-white dark:bg-orange-900/30 dark:text-orange-300';
+        return type === 'WS' ? 'bg-indigo-600 text-white dark:bg-blue-900/30 dark:text-blue-300' : 'bg-amber-600 text-white dark:bg-orange-900/30 dark:text-orange-300';
     }; if (isLoading) {
         return (
             <div className="min-h-screen bg-background text-foreground flex items-center justify-center">

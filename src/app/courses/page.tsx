@@ -240,8 +240,8 @@ export default function CoursesPage() {
                                 <div className="flex flex-col gap-2 items-end">
                                     <span
                                         className={`px-3 py-1 rounded-full text-xs font-medium ${course.semester === 'WS'
-                                            ? 'bg-blue-600 text-white dark:bg-blue-900/30 dark:text-blue-300'
-                                            : 'bg-orange-600 text-white dark:bg-orange-900/30 dark:text-orange-300'
+                                            ? 'bg-indigo-600 text-white dark:bg-blue-900/30 dark:text-blue-300'
+                                            : 'bg-amber-600 text-white dark:bg-orange-900/30 dark:text-orange-300'
                                             }`}
                                     >
                                         {course.semester}
