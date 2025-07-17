@@ -15,40 +15,36 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Erstelle SQL-Statements, um StEOP-Felder hinzuzufügen
-        // Da Prisma schema changes nicht direkt auf Vercel funktionieren,
-        // verwenden wir Raw SQL
+        let updatedSteopRequired = 0
+        let updatedSteopAllowed = 0
 
         try {
-            // Füge die StEOP-Spalten hinzu, falls sie nicht existieren
-            await db.$executeRaw`
-                ALTER TABLE courses 
-                ADD COLUMN IF NOT EXISTS "isSteopRequired" BOOLEAN DEFAULT false,
-                ADD COLUMN IF NOT EXISTS "isSteopAllowed" BOOLEAN DEFAULT false;
-            `
-
             // Aktualisiere StEOP-Pflicht-Kurse
             for (const courseCode of STEOP_REQUIRED_COURSES) {
-                await db.$executeRaw`
+                const result = await db.$executeRaw`
                     UPDATE courses 
                     SET "isSteopRequired" = true 
                     WHERE "courseCode" = ${courseCode};
                 `
+                if (result) updatedSteopRequired++
             }
 
             // Aktualisiere StEOP-erlaubte Kurse
             for (const courseCode of STEOP_ALLOWED_COURSES) {
-                await db.$executeRaw`
+                const result = await db.$executeRaw`
                     UPDATE courses 
                     SET "isSteopAllowed" = true 
                     WHERE "courseCode" = ${courseCode};
                 `
+                if (result) updatedSteopAllowed++
             }
 
             return NextResponse.json({
-                message: 'StEOP fields added and updated successfully',
-                steopRequired: STEOP_REQUIRED_COURSES.length,
-                steopAllowed: STEOP_ALLOWED_COURSES.length
+                message: 'StEOP flags updated successfully',
+                steopRequiredUpdated: updatedSteopRequired,
+                steopAllowedUpdated: updatedSteopAllowed,
+                totalSteopRequired: STEOP_REQUIRED_COURSES.length,
+                totalSteopAllowed: STEOP_ALLOWED_COURSES.length
             })
 
         } catch (sqlError) {

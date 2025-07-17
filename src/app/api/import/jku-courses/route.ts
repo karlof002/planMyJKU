@@ -30,15 +30,8 @@ export async function POST(request: NextRequest) {
                 })
 
                 if (existingCourse) {
-                    // Aktualisiere bestehende Kurse mit StEOP-Flags
-                    await db.course.update({
-                        where: { courseCode: courseData.courseCode },
-                        data: {
-                            isSteopRequired: courseData.isSteopRequired,
-                            isSteopAllowed: courseData.isSteopAllowed
-                        }
-                    })
-                    updatedCount++
+                    // Überspringe bestehende Kurse für jetzt
+                    skippedCount++
                     continue
                 }
 
@@ -55,9 +48,7 @@ export async function POST(request: NextRequest) {
                         prerequisites: [], // Kann später erweitert werden
                         language: courseData.language,
                         courseType: courseData.courseType,
-                        isActive: true,
-                        isSteopRequired: courseData.isSteopRequired,
-                        isSteopAllowed: courseData.isSteopAllowed
+                        isActive: true
                     }
                 })
 
@@ -70,7 +61,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
             message: 'JKU courses import completed',
             imported: importedCount,
-            updated: updatedCount,
             skipped: skippedCount,
             total: jkuCourses.length
         })
