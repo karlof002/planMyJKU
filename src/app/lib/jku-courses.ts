@@ -1,5 +1,5 @@
-import * as cheerio from 'cheerio';
-import { getSteopStatus } from './steop-mapping';
+// import * as cheerio from 'cheerio' // Für zukünftige Scraping-Funktionalität
+import { getSteopStatus } from './steop-mapping'
 
 interface Course {
   courseCode: string;
@@ -30,10 +30,11 @@ export async function scrapeJKUInformatikCourses(): Promise<Course[]> {
     for (const url of urls) {
       const response = await fetch(url);
       const html = await response.text();
-      const $ = cheerio.load(html);
+      // const $ = cheerio.load(html); // Unused for now
 
       // Hier würde der spezifische Parser für die JKU-Seite kommen
       // Da die Struktur komplex ist, ist es besser, die Daten manuell zu sammeln
+      console.log(`Fetched ${html.length} characters from ${url}`);
     }
 
   } catch (error) {
