@@ -1,6 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 interface CalendarHeaderProps {
     currentDate: Date;
@@ -26,7 +27,7 @@ export function CalendarHeader({
                                 Calendar
                             </h1>
                             <p className="text-muted-foreground text-sm">
-                                {format(currentDate, 'MMMM yyyy')}
+                                {format(currentDate, 'MMMM yyyy', { locale: de })}
                             </p>
                         </div>
                     </div>
@@ -35,7 +36,7 @@ export function CalendarHeader({
                     <div className="flex items-center gap-3">
                         <button
                             onClick={onAddActivity}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors flex items-center gap-2"
+                            className="px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -44,7 +45,7 @@ export function CalendarHeader({
                         </button>
                         <button
                             onClick={onOpenTemplates}
-                            className="px-4 py-2 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-colors flex items-center gap-2"
+                            className="px-4 py-2 bg-secondary text-secondary-foreground border border-border rounded-xl hover:bg-secondary/80 transition-colors flex items-center gap-2"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -67,7 +68,7 @@ export function CalendarHeader({
                             </svg>
                         </button>
                         <h2 className="text-lg font-semibold text-card-foreground min-w-[200px] text-center">
-                            {format(currentDate, 'MMMM yyyy')}
+                            {format(currentDate, 'MMMM yyyy', { locale: de })}
                         </h2>
                         <button
                             onClick={() => onNavigate('next')}

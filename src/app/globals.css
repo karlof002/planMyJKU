@@ -4,38 +4,70 @@
 @layer base {
   :root {
     --background: 255 255 255;
-    --foreground: 0 0 0;
+    --foreground: 24 24 27;
     --muted: 245 245 245;
+    --muted-foreground: 115 115 115;
     --border: 229 229 229;
     --input: 255 255 255;
-    --primary: 0 0 0;
-    --primary-foreground: 255 255 255;
-    --secondary: 245 245 245;
-    --secondary-foreground: 0 0 0;
-    --accent: 245 245 245;
-    --accent-foreground: 0 0 0;
+    --primary: 24 24 27;
+    --primary-foreground: 250 250 250;
+    --secondary: 244 244 245;
+    --secondary-foreground: 24 24 27;
+    --accent: 244 244 245;
+    --accent-foreground: 24 24 27;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
     --card: 255 255 255;
-    --card-foreground: 0 0 0;
+    --card-foreground: 24 24 27;
+
+    /* Activity colors */
+    --activity-blue: 59 130 246;
+    --activity-red: 239 68 68;
+    --activity-amber: 245 158 11;
+    --activity-emerald: 16 185 129;
+    --activity-violet: 139 92 246;
+    --activity-orange: 249 115 22;
+    --activity-cyan: 6 182 212;
+    --activity-lime: 132 204 22;
+    --activity-pink: 236 72 153;
+    --activity-indigo: 99 102 241;
+
+    /* Calendar specific colors */
+    --calendar-azure: 0 127 255;
   }
 
   .dark {
-    --background: 0 0 0;
-    --foreground: 255 255 255;
-    --muted: 10 10 10;
-    --border: 38 38 38;
-    --input: 10 10 10;
-    --primary: 255 255 255;
-    --primary-foreground: 0 0 0;
-    --secondary: 10 10 10;
-    --secondary-foreground: 255 255 255;
-    --accent: 10 10 10;
-    --accent-foreground: 255 255 255;
+    --background: 9 9 11;
+    --foreground: 250 250 250;
+    --muted: 24 24 27;
+    --muted-foreground: 161 161 170;
+    --border: 39 39 42;
+    --input: 24 24 27;
+    --primary: 250 250 250;
+    --primary-foreground: 9 9 11;
+    --secondary: 39 39 42;
+    --secondary-foreground: 250 250 250;
+    --accent: 39 39 42;
+    --accent-foreground: 250 250 250;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
-    --card: 10 10 10;
-    --card-foreground: 255 255 255;
+    --card: 24 24 27;
+    --card-foreground: 250 250 250;
+
+    /* Activity colors - same in dark mode for consistency */
+    --activity-blue: 59 130 246;
+    --activity-red: 239 68 68;
+    --activity-amber: 245 158 11;
+    --activity-emerald: 16 185 129;
+    --activity-violet: 139 92 246;
+    --activity-orange: 249 115 22;
+    --activity-cyan: 6 182 212;
+    --activity-lime: 132 204 22;
+    --activity-pink: 236 72 153;
+    --activity-indigo: 99 102 241;
+
+    /* Calendar specific colors */
+    --calendar-azure: 0 127 255;
   }
 }
 
@@ -82,6 +114,10 @@
 
   .bg-muted {
     background-color: rgb(var(--muted));
+  }
+
+  .text-muted-foreground {
+    color: rgb(var(--muted-foreground));
   }
 
   .bg-input {
@@ -138,6 +174,23 @@
 
   .bg-background\/60 {
     background-color: rgb(var(--background) / 0.6);
+  }
+
+  /* Calendar azure blue */
+  .text-calendar-azure {
+    color: rgb(var(--calendar-azure));
+  }
+
+  .text-calendar-azure\/70 {
+    color: rgb(var(--calendar-azure) / 0.7);
+  }
+
+  .bg-calendar-azure\/20 {
+    background-color: rgb(var(--calendar-azure) / 0.2);
+  }
+
+  .ring-calendar-azure\/40 {
+    --tw-ring-color: rgb(var(--calendar-azure) / 0.4);
   }
 
   /* Animation utilities */

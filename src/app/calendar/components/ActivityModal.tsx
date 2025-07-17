@@ -30,18 +30,23 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
         startTime: '09:00',
         endTime: '10:00',
         type: 'personal' as 'exam' | 'assignment' | 'lecture' | 'meeting' | 'personal',
-        color: '#3b82f6'
+        color: 'rgb(var(--activity-blue))'
     });
 
     const [showColorPicker, setShowColorPicker] = useState(false);
 
+    // Theme-aware colors using CSS variables
     const predefinedColors = [
-        '#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6',
-        '#f97316', '#06b6d4', '#84cc16', '#ec4899', '#6366f1',
-        '#14b8a6', '#f43f5e', '#a855f7', '#3b82f6', '#64748b',
-        '#dc2626', '#ea580c', '#ca8a04', '#16a34a', '#2563eb',
-        '#7c3aed', '#059669', '#0891b2', '#be123c', '#9333ea',
-        '#0d9488', '#c2410c', '#facc15', '#4ade80', '#60a5fa'
+        'rgb(var(--activity-blue))',
+        'rgb(var(--activity-red))',
+        'rgb(var(--activity-amber))',
+        'rgb(var(--activity-emerald))',
+        'rgb(var(--activity-violet))',
+        'rgb(var(--activity-orange))',
+        'rgb(var(--activity-cyan))',
+        'rgb(var(--activity-lime))',
+        'rgb(var(--activity-pink))',
+        'rgb(var(--activity-indigo))'
     ];
 
     useEffect(() => {
@@ -63,7 +68,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                 startTime: '09:00',
                 endTime: '10:00',
                 type: 'personal',
-                color: '#3b82f6'
+                color: 'rgb(var(--activity-blue))'
             });
         }
     }, [activity, selectedDate]);
@@ -83,43 +88,43 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-            <div className="bg-card rounded-2xl p-6 w-full max-w-md border border-border" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in-0" onClick={onClose}>
+            <div className="bg-card rounded-2xl p-6 w-full max-w-md border border-border animate-in zoom-in-95 slide-in-from-bottom-1" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                    <h2 className="text-xl font-semibold text-card-foreground">
                         {activity ? 'Edit Activity' : 'Add Activity'}
                     </h2>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors"
                     >
-                        <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <div>                    <label className="block text-sm font-medium text-card-foreground mb-2">
                         Title
                     </label>
                         <input
                             type="text"
                             value={formData.title}
                             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                            className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
+                            className="w-full px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-card-foreground"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                        <label className="block text-sm font-medium text-card-foreground mb-2">
                             Description
                         </label>
                         <textarea
                             value={formData.description}
                             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                            className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100"
+                            className="w-full px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-card-foreground"
                             rows={3}
                         />
                     </div>
@@ -132,7 +137,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                             type="date"
                             value={formData.date}
                             onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                            className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground"
+                            className="w-full px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-card-foreground"
                             required
                         />
                     </div>
@@ -146,7 +151,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                                 type="time"
                                 value={formData.startTime}
                                 onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                                className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground"
+                                className="w-full px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-card-foreground"
                                 required
                             />
                         </div>
@@ -159,7 +164,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                                 type="time"
                                 value={formData.endTime}
                                 onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
-                                className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground"
+                                className="w-full px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-card-foreground"
                                 required
                             />
                         </div>
@@ -172,7 +177,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                         <select
                             value={formData.type}
                             onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as Activity['type'] }))}
-                            className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground"
+                            className="w-full px-3 py-2 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-card-foreground"
                         >
                             <option value="personal">Personal</option>
                             <option value="lecture">Lecture</option>
@@ -201,12 +206,12 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                         </div>
 
                         {showColorPicker && (
-                            <div className="mt-2 p-2 bg-background border border-border rounded-lg">
+                            <div className="mt-2 p-2 bg-card border border-border rounded-lg">
                                 <div className="grid grid-cols-10 gap-2">
                                     {predefinedColors.map(color => (
                                         <div
                                             key={color}
-                                            className={`w-8 h-8 rounded-lg cursor-pointer border-2 hover:scale-110 transition-transform ${formData.color === color ? 'border-foreground scale-110' : 'border-border'
+                                            className={`w-8 h-8 rounded-lg cursor-pointer border-2 hover:scale-110 transition-transform ${formData.color === color ? 'border-primary scale-110' : 'border-border'
                                                 }`}
                                             style={{ backgroundColor: color }}
                                             onClick={() => {
@@ -226,7 +231,7 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                                 <button
                                     type="button"
                                     onClick={handleDelete}
-                                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                    className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors"
                                 >
                                     Delete
                                 </button>
@@ -237,13 +242,13 @@ export function ActivityModal({ isOpen, onClose, onSave, activity, selectedDate,
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2 border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-900 dark:text-gray-100"
+                                className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-card-foreground"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                             >
                                 {activity ? 'Update' : 'Save'}
                             </button>

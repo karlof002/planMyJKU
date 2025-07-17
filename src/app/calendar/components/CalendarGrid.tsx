@@ -101,13 +101,16 @@ export function CalendarGrid({
         return date.toISOString().split('T')[0] === selectedDate;
     };
 
+    // Weekend checker (Saturday = 6, Sunday = 0)
+    const isWeekend = (date: Date) => {
+        const dayOfWeek = date.getDay();
+        return dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+    };
+
     const formatTime = (timeString: string) => {
         if (!timeString) return '';
-        const [hours, minutes] = timeString.split(':');
-        const hour = parseInt(hours);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour % 12 || 12;
-        return `${displayHour}:${minutes} ${ampm}`;
+        // Return 24-hour format (Austrian standard)
+        return timeString;
     };
 
     const handleDragStart = (e: React.DragEvent, activity: Activity) => {
@@ -136,7 +139,7 @@ export function CalendarGrid({
         setDraggedActivity(null);
     };
 
-    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
     if (view === 'week') {
         return (
@@ -145,12 +148,16 @@ export function CalendarGrid({
                 <div className="grid grid-cols-7 border-b border-border">
                     {calendarDays.map((day, index) => (
                         <div key={index} className="p-4 text-center border-r border-border last:border-r-0">
-                            <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                            <div className="text-sm font-medium text-muted-foreground">
                                 {weekDays[day.getDay()]}
                             </div>
                             <div className={`text-2xl font-bold mt-1 ${isToday(day)
-                                ? 'text-blue-600 dark:text-blue-400'
-                                : 'text-gray-900 dark:text-gray-100'
+                                ? 'text-blue-500 font-bold'
+                                : isSelectedDate(day)
+                                    ? 'text-blue-500 font-bold'
+                                    : isWeekend(day)
+                                        ? 'text-muted-foreground font-medium'
+                                        : 'text-card-foreground'
                                 }`}>
                                 {day.getDate()}
                             </div>
@@ -167,7 +174,7 @@ export function CalendarGrid({
                         return (
                             <div
                                 key={index}
-                                className={`p-2 border-r border-gray-200 dark:border-gray-700 last:border-r-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors ${isSelectedDate(day) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                                className={`p-2 border-r border-border last:border-r-0 cursor-pointer hover:bg-muted/50 transition-colors ${isSelectedDate(day) ? 'bg-blue-500/20 ring-2 ring-blue-500/40' : ''
                                     }`}
                                 onClick={() => onDateClick(dateString)}
                                 onDragOver={handleDragOver}
@@ -188,10 +195,10 @@ export function CalendarGrid({
                                             onDragStart={(e) => handleDragStart(e, activity)}
                                             onDragEnd={handleDragEnd}
                                         >
-                                            <div className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                                            <div className="font-medium text-card-foreground truncate">
                                                 {activity.title}
                                             </div>
-                                            <div className="text-sm text-gray-600 dark:text-gray-300">
+                                            <div className="text-sm text-muted-foreground">
                                                 {formatTime(activity.startTime)} - {formatTime(activity.endTime)}
                                             </div>
                                         </div>
@@ -209,10 +216,10 @@ export function CalendarGrid({
     return (
         <div className="bg-card border border-border rounded-2xl overflow-hidden">
             {/* Month Header */}
-            <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-7 border-b border-border">
                 {weekDays.map((day) => (
-                    <div key={day} className="p-4 text-center border-r border-gray-200 dark:border-gray-700 last:border-r-0">
-                        <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    <div key={day} className="p-4 text-center border-r border-border last:border-r-0">
+                        <div className="text-sm font-medium text-muted-foreground">
                             {day}
                         </div>
                     </div>
@@ -228,18 +235,19 @@ export function CalendarGrid({
                     return (
                         <div
                             key={index}
-                            className={`min-h-[120px] p-2 border-r border-b border-gray-200 dark:border-gray-700 last:border-r-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors ${!isCurrentMonth(day) ? 'bg-gray-50 dark:bg-gray-900/50' : ''
-                                } ${isSelectedDate(day) ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                            className={`min-h-[120px] p-2 border-r border-b border-border last:border-r-0 cursor-pointer hover:bg-muted/50 transition-colors ${isSelectedDate(day) ? 'bg-blue-500/20 ring-2 ring-blue-500/40' : ''
                                 }`}
                             onClick={() => onDateClick(dateString)}
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, day)}
                         >
                             <div className={`text-sm font-medium mb-1 ${isToday(day)
-                                ? 'text-blue-600 dark:text-blue-400'
-                                : !isCurrentMonth(day)
-                                    ? 'text-gray-400 dark:text-gray-600'
-                                    : 'text-gray-900 dark:text-gray-100'
+                                ? 'text-blue-500 font-bold'
+                                : isSelectedDate(day)
+                                    ? 'text-blue-500 font-bold'
+                                    : isWeekend(day)
+                                        ? 'text-muted-foreground font-medium'
+                                        : 'text-card-foreground'
                                 }`}>
                                 {day.getDate()}
                             </div>
@@ -259,16 +267,16 @@ export function CalendarGrid({
                                         onDragStart={(e) => handleDragStart(e, activity)}
                                         onDragEnd={handleDragEnd}
                                     >
-                                        <div className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                                        <div className="font-medium text-card-foreground truncate">
                                             {activity.title}
                                         </div>
-                                        <div className="text-xs text-gray-600 dark:text-gray-300">
+                                        <div className="text-xs text-muted-foreground">
                                             {formatTime(activity.startTime)}
                                         </div>
                                     </div>
                                 ))}
                                 {dayActivities.length > 3 && (
-                                    <div className="text-xs text-gray-500 dark:text-gray-400 p-1">
+                                    <div className="text-xs text-muted-foreground p-1">
                                         +{dayActivities.length - 3} more
                                     </div>
                                 )}

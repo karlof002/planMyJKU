@@ -492,16 +492,16 @@ export default function CalendarPage() {
 
                 {/* Date Modal */}
                 {showDateModal && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={() => setShowDateModal(false)}>
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 animate-in fade-in-0" onClick={() => setShowDateModal(false)}>
                         <div className="flex items-center justify-center min-h-screen p-4">
                             <div
-                                className="bg-card border border-border rounded-2xl w-full max-w-md shadow-xl"
+                                className="bg-card border border-border rounded-2xl w-full max-w-md shadow-xl animate-in zoom-in-95 slide-in-from-bottom-1"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <div className="p-6">
                                     <div className="flex items-center justify-between mb-6">
-                                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                                            {selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', {
+                                        <h2 className="text-xl font-semibold text-card-foreground">
+                                            {selectedDate ? new Date(selectedDate).toLocaleDateString('de-AT', {
                                                 weekday: 'long',
                                                 year: 'numeric',
                                                 month: 'long',
@@ -510,9 +510,9 @@ export default function CalendarPage() {
                                         </h2>
                                         <button
                                             onClick={() => setShowDateModal(false)}
-                                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                            className="p-2 hover:bg-muted/50 rounded-lg transition-colors"
                                         >
-                                            <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
@@ -521,12 +521,12 @@ export default function CalendarPage() {
                                     {/* Show activities for this date */}
                                     {activities.filter(activity => activity.date === selectedDate).length > 0 && (
                                         <div className="mb-6">
-                                            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Activities</h3>
+                                            <h3 className="text-sm font-medium text-card-foreground mb-3">Activities</h3>
                                             <div className="space-y-2">
                                                 {activities.filter(activity => activity.date === selectedDate).map((activity) => (
                                                     <div
                                                         key={activity.id}
-                                                        className="flex items-center gap-3 p-3 bg-background border border-border rounded-lg hover:bg-gray-100 dark:hover:bg-muted/50 cursor-pointer transition-colors"
+                                                        className="flex items-center gap-3 p-3 bg-background border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
                                                         onClick={() => {
                                                             setEditingActivity(activity);
                                                             setIsModalOpen(true);
@@ -538,8 +538,8 @@ export default function CalendarPage() {
                                                             style={{ backgroundColor: activity.color }}
                                                         />
                                                         <div className="flex-1">
-                                                            <div className="font-medium text-gray-900 dark:text-gray-100">{activity.title}</div>
-                                                            <div className="text-sm text-gray-600 dark:text-gray-300">
+                                                            <div className="font-medium text-card-foreground">{activity.title}</div>
+                                                            <div className="text-sm text-muted-foreground">
                                                                 {activity.startTime} - {activity.endTime}
                                                             </div>
                                                         </div>
@@ -553,7 +553,7 @@ export default function CalendarPage() {
                                     <div className="flex gap-3">
                                         <button
                                             onClick={handleShowActivityModal}
-                                            className="flex-1 px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 flex items-center justify-center gap-2"
+                                            className="flex-1 px-4 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 flex items-center justify-center gap-2 transition-colors"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -562,7 +562,7 @@ export default function CalendarPage() {
                                         </button>
                                         <button
                                             onClick={handleShowTemplateModal}
-                                            className="flex-1 px-4 py-3 border border-border rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 flex items-center justify-center gap-2 transition-colors"
+                                            className="flex-1 px-4 py-3 border border-border rounded-xl hover:bg-muted/50 text-card-foreground flex items-center justify-center gap-2 transition-colors"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
