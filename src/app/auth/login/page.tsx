@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginContent() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -42,7 +42,7 @@ export default function LoginPage() {
                     setError(data.error || "Login failed");
                 }
             }
-        } catch (error) {
+        } catch {
             setError("An error occurred. Please try again.");
         } finally {
             setIsLoading(false);
@@ -125,7 +125,7 @@ export default function LoginPage() {
 
                     <div className="text-center">
                         <p className="text-sm text-foreground/60">
-                            Don't have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link
                                 href="/auth/register"
                                 className="font-medium text-primary hover:text-primary/80"
@@ -137,5 +137,13 @@ export default function LoginPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LoginContent />
+        </Suspense>
     );
 }

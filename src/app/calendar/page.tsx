@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navigation } from '../components/Navigation';
 import { CalendarHeader } from './components/CalendarHeader';
@@ -77,7 +77,7 @@ export default function CalendarPage() {
             fetchTemplates();
             fetchActivityTypes();
         }
-    }, [user]); // Removing dependencies to avoid re-declarations
+    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchActivities = async () => {
         try {

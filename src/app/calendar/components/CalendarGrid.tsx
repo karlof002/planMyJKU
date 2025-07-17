@@ -43,7 +43,7 @@ export function CalendarGrid({
         } else {
             generateWeekView();
         }
-    }, [currentDate, view]);
+    }, [currentDate, view]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const generateMonthView = () => {
         const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -98,10 +98,6 @@ export function CalendarGrid({
     const isToday = (date: Date) => {
         const today = new Date();
         return date.toDateString() === today.toDateString();
-    };
-
-    const isCurrentMonth = (date: Date) => {
-        return date.getMonth() === currentDate.getMonth();
     };
 
     const isSelectedDate = (date: Date) => {

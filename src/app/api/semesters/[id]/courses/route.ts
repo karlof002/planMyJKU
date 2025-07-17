@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '../../../../lib/db'
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id: semesterId } = params
+        const { id: semesterId } = await params
         const body = await request.json()
         const { courseId, userId } = body
 
@@ -64,9 +64,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id: semesterId } = params
+        const { id: semesterId } = await params
         const body = await request.json()
         const { semesterCourseId, userId } = body
 

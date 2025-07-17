@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '../../../lib/db'
 
-interface RouteParams {
-    params: {
-        id: string
-    }
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { searchParams } = new URL(request.url)
         const userId = searchParams.get('userId')
-        const semesterId = params.id
+        const { id: semesterId } = await params
 
         if (!userId) {
             return NextResponse.json(
@@ -51,11 +45,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const body = await request.json()
         const { userId, name, year, type, isActive } = body
-        const semesterId = params.id
+        const { id: semesterId } = await params
 
         if (!userId) {
             return NextResponse.json(
@@ -105,11 +99,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { searchParams } = new URL(request.url)
         const userId = searchParams.get('userId')
-        const semesterId = params.id
+        const { id: semesterId } = await params
 
         if (!userId) {
             return NextResponse.json(

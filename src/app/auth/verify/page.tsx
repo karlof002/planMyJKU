@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
     const [code, setCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
@@ -33,7 +33,7 @@ export default function VerifyEmailPage() {
             } else {
                 setError(data.error || "Verification failed");
             }
-        } catch (error) {
+        } catch {
             setError("An error occurred. Please try again.");
         } finally {
             setIsLoading(false);
@@ -59,7 +59,7 @@ export default function VerifyEmailPage() {
                 <div className="text-center">
                     <h1 className="text-3xl font-bold">Verify Your Email</h1>
                     <p className="mt-2 text-sm text-foreground/60">
-                        We've sent a 6-digit code to <strong>{email}</strong>
+                        We&apos;ve sent a 6-digit code to <strong>{email}</strong>
                     </p>
                 </div>
 
@@ -98,7 +98,7 @@ export default function VerifyEmailPage() {
 
                     <div className="text-center">
                         <p className="text-sm text-foreground/60">
-                            Didn't receive the code?{" "}
+                            Didn&apos;t receive the code?{" "}
                             <button
                                 type="button"
                                 className="font-medium text-primary hover:text-primary/80"
@@ -114,5 +114,13 @@ export default function VerifyEmailPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function VerifyEmailPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <VerifyEmailContent />
+        </Suspense>
     );
 }

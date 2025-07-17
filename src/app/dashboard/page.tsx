@@ -41,6 +41,7 @@ interface Stats {
 }
 
 export default function DashboardPage() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [user, setUser] = useState<User | null>(null);
     const [userCourses, setUserCourses] = useState<UserCourse[]>([]);
     const [stats, setStats] = useState<Stats>({
@@ -62,8 +63,9 @@ export default function DashboardPage() {
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
-            fetchUserData(JSON.parse(storedUser).id);
+            const userData = JSON.parse(storedUser);
+            setUser(userData);
+            fetchUserData(userData.id);
         } else {
             router.push('/auth/login');
         }
