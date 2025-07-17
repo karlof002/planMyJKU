@@ -23,6 +23,8 @@ interface Course {
     courseType: string;
     prerequisites: string[];
     description?: string;
+    isSteopRequired?: boolean;
+    isSteopAllowed?: boolean;
 }
 
 interface SemesterCourse {

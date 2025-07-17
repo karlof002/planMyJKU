@@ -145,28 +145,31 @@ export default function CoursesPage() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-foreground mb-2">Course Catalog</h1>
                     <p className="text-foreground/60">Browse and add courses to your study plan</p>
-                    
+
                     {/* StEOP Legend */}
-                    <div className="mt-4 p-4 bg-secondary/30 rounded-lg border border-border">
-                        <h3 className="text-sm font-semibold mb-3">StEOP (Studieneingangs- und Orientierungsphase) Legende:</h3>
-                        <div className="flex flex-wrap gap-4 text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800 font-medium">
+                    <div className="mt-6 p-5 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">📚 StEOP Legende</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="flex items-center gap-3 p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium text-sm shadow-sm">
+                                    <span className="text-xs">⚠️</span>
                                     StEOP Pflicht
-                                </span>
-                                <span className="text-foreground/70">Muss für StEOP-Abschluss absolviert werden</span>
+                                </div>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">Muss für StEOP absolviert werden</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-800 font-medium">
+                            <div className="flex items-center gap-3 p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium text-sm shadow-sm">
+                                    <span className="text-xs">✅</span>
                                     StEOP erlaubt
-                                </span>
-                                <span className="text-foreground/70">Kann vor StEOP-Abschluss absolviert werden</span>
+                                </div>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">Kann vor StEOP absolviert werden</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-800">
+                            <div className="flex items-center gap-3 p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-gray-500 to-slate-500 text-white font-medium text-sm shadow-sm">
+                                    <span className="text-xs">🔒</span>
                                     Nach StEOP
-                                </span>
-                                <span className="text-foreground/70">Erst nach StEOP-Abschluss möglich</span>
+                                </div>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">Erst nach StEOP möglich</span>
                             </div>
                         </div>
                     </div>
@@ -231,60 +234,70 @@ export default function CoursesPage() {
                 {/* Course List */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredCourses.map(course => (
-                        <div key={course.id} className="bg-secondary/50 rounded-lg p-6 border border-border">
+                        <div key={course.id} className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200">
                             <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="text-lg font-semibold">{course.courseCode}</h3>
-                                    <p className="text-sm text-foreground/60">{course.courseType} • {course.ects} ECTS</p>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className={`px-2 py-1 rounded text-xs ${course.semester === 'WS' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-                                        }`}>
-                                        {course.semester}
-                                    </span>
-                                    {course.isSteopRequired && (
-                                        <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800 font-medium">
-                                            StEOP Pflicht
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{course.courseCode}</h3>
+                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${course.semester === 'WS' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
+                                            }`}>
+                                            {course.semester === 'WS' ? '❄️ Winter' : '☀️ Sommer'}
                                         </span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{course.courseType} • {course.ects} ECTS</p>
+                                </div>
+                                <div className="flex flex-col gap-2 items-end">
+                                    {course.isSteopRequired && (
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium text-xs shadow-sm">
+                                            <span className="text-[10px]">⚠️</span>
+                                            StEOP Pflicht
+                                        </div>
                                     )}
                                     {course.isSteopAllowed && !course.isSteopRequired && (
-                                        <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-800 font-medium">
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium text-xs shadow-sm">
+                                            <span className="text-[10px]">✅</span>
                                             StEOP erlaubt
-                                        </span>
+                                        </div>
+                                    )}
+                                    {!course.isSteopRequired && !course.isSteopAllowed && (
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-gray-500 to-slate-500 text-white font-medium text-xs shadow-sm">
+                                            <span className="text-[10px]">🔒</span>
+                                            Nach StEOP
+                                        </div>
                                     )}
                                 </div>
                             </div>
 
-                            <h4 className="font-medium mb-2">{course.title}</h4>
+                            <h4 className="font-semibold mb-3 text-gray-900 dark:text-white text-base">{course.title}</h4>
 
                             {course.description && (
-                                <p className="text-sm text-foreground/70 mb-3 line-clamp-3">
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 leading-relaxed">
                                     {course.description}
                                 </p>
                             )}
 
-                            <div className="space-y-2 text-sm">
-                                <div>
-                                    <span className="font-medium">Faculty: </span>
-                                    <span className="text-foreground/70">{course.faculty}</span>
+                            <div className="space-y-3 text-sm border-t border-gray-100 dark:border-gray-700 pt-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="font-medium text-gray-700 dark:text-gray-300">🏛️ Faculty:</span>
+                                    <span className="text-gray-600 dark:text-gray-400">{course.faculty}</span>
                                 </div>
-                                <div>
-                                    <span className="font-medium">Language: </span>
-                                    <span className="text-foreground/70">{course.language}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="font-medium text-gray-700 dark:text-gray-300">🌐 Language:</span>
+                                    <span className="text-gray-600 dark:text-gray-400">{course.language}</span>
                                 </div>
                                 {course.prerequisites.length > 0 && (
-                                    <div>
-                                        <span className="font-medium">Prerequisites: </span>
-                                        <span className="text-foreground/70">{course.prerequisites.join(', ')}</span>
+                                    <div className="flex items-start gap-2">
+                                        <span className="font-medium text-gray-700 dark:text-gray-300">📋 Prerequisites:</span>
+                                        <span className="text-gray-600 dark:text-gray-400 flex-1">{course.prerequisites.join(', ')}</span>
                                     </div>
                                 )}
                             </div>
 
                             <button
                                 onClick={() => addCourseToUser(course.id)}
-                                className="w-full mt-4 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
                             >
-                                Add to Plan
+                                ➕ Add to Plan
                             </button>
                         </div>
                     ))}

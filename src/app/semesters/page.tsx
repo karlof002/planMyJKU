@@ -22,6 +22,8 @@ interface Course {
     faculty: string;
     courseType: string;
     prerequisites: string[];
+    isSteopRequired?: boolean;
+    isSteopAllowed?: boolean;
 }
 
 interface Semester {
@@ -110,7 +112,9 @@ export default function SemestersPage() {
     };
 
     const getSemesterTypeColor = (type: string) => {
-        return type === 'WS' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        return type === 'WS' 
+            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' 
+            : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300';
     };
 
     if (isLoading) {
@@ -207,46 +211,65 @@ export default function SemestersPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {semesters.map(semester => (
-                        <div key={semester.id} className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div key={semester.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <h3 className="text-lg font-semibold">{semester.name}</h3>
-                                    <p className="text-sm text-foreground/60">{semester.year}</p>
+                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">{semester.name}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">📅 {semester.year}</p>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                    <span className={`px-2 py-1 rounded text-xs ${getSemesterTypeColor(semester.type)}`}>
-                                        {semester.type}
+                                <div className="flex flex-col items-end gap-2">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSemesterTypeColor(semester.type)}`}>
+                                        {semester.type === 'WS' ? '❄️ Winter' : '☀️ Sommer'}
                                     </span>
                                     {semester.isActive && (
-                                        <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                            Active
+                                        <span className="px-3 py-1 rounded-full text-xs bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-sm">
+                                            🎯 Active
                                         </span>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="space-y-3">
-                                <div className="flex justify-between text-sm">
-                                    <span>Courses:</span>
-                                    <span className="font-medium">{semester.courses.length}</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <span>Total ECTS:</span>
-                                    <span className="font-medium">{getTotalECTS(semester)}</span>
+                            <div className="space-y-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">📚 Courses:</span>
+                                        <span className="font-bold text-blue-600 dark:text-blue-400">{semester.courses.length}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">🎓 ECTS:</span>
+                                        <span className="font-bold text-purple-600 dark:text-purple-400">{getTotalECTS(semester)}</span>
+                                    </div>
                                 </div>
 
                                 {semester.courses.length > 0 && (
                                     <div className="mt-4">
-                                        <h4 className="text-sm font-medium mb-2">Courses:</h4>
-                                        <div className="space-y-1">
+                                        <h4 className="text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">Courses:</h4>
+                                        <div className="space-y-2">
                                             {semester.courses.slice(0, 3).map(sc => (
-                                                <div key={sc.id} className="text-xs text-foreground/70 flex justify-between">
-                                                    <span>{sc.course.courseCode}</span>
-                                                    <span>{sc.course.ects} ECTS</span>
+                                                <div key={sc.id} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-xs font-mono font-medium text-gray-800 dark:text-gray-200">{sc.course.courseCode}</span>
+                                                        {sc.course.isSteopRequired && (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] font-medium">
+                                                                ⚠️ StEOP
+                                                            </span>
+                                                        )}
+                                                        {sc.course.isSteopAllowed && !sc.course.isSteopRequired && (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] font-medium">
+                                                                ✅ StEOP
+                                                            </span>
+                                                        )}
+                                                        {!sc.course.isSteopRequired && !sc.course.isSteopAllowed && (
+                                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-gray-500 to-slate-500 text-white text-[10px] font-medium">
+                                                                🔒
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{sc.course.ects} ECTS</span>
                                                 </div>
                                             ))}
                                             {semester.courses.length > 3 && (
-                                                <div className="text-xs text-foreground/50">
+                                                <div className="text-xs text-gray-500 dark:text-gray-400 text-center py-1">
                                                     +{semester.courses.length - 3} more courses
                                                 </div>
                                             )}
@@ -258,9 +281,9 @@ export default function SemestersPage() {
                             <div className="mt-6">
                                 <button
                                     onClick={() => router.push(`/semesters/${semester.id}`)}
-                                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
                                 >
-                                    View Details
+                                    👁️ View Details
                                 </button>
                             </div>
                         </div>
