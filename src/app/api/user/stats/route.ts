@@ -20,12 +20,12 @@ export async function GET(request: NextRequest) {
             }
         })
 
-        const completedCourses = userCourses.filter((uc: any) => uc.status === 'completed')
-        const enrolledCourses = userCourses.filter((uc: any) => uc.status === 'enrolled')
-        const plannedCourses = userCourses.filter((uc: any) => uc.status === 'planned')
+        const completedCourses = userCourses.filter((uc) => uc.status === 'completed')
+        const enrolledCourses = userCourses.filter((uc) => uc.status === 'enrolled')
+        const plannedCourses = userCourses.filter((uc) => uc.status === 'planned')
 
-        const totalECTS = completedCourses.reduce((sum: number, uc: any) => sum + (uc.ects || uc.course.ects), 0)
-        const gradesSum = completedCourses.reduce((sum: number, uc: any) => sum + (uc.grade || 0), 0)
+        const totalECTS = completedCourses.reduce((sum: number, uc) => sum + (uc.ects || uc.course.ects), 0)
+        const gradesSum = completedCourses.reduce((sum: number, uc) => sum + (uc.grade || 0), 0)
         const currentGPA = completedCourses.length > 0 ? gradesSum / completedCourses.length : 0
 
         const stats = {
