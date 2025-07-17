@@ -16,6 +16,8 @@ interface Course {
     prerequisites: string[];
     language: string;
     courseType: string;
+    isSteopRequired: boolean;
+    isSteopAllowed: boolean;
 }
 
 interface User {
@@ -35,6 +37,7 @@ export default function CoursesPage() {
     const [selectedFaculty, setSelectedFaculty] = useState("");
     const [selectedSemester, setSelectedSemester] = useState("");
     const [selectedCourseType, setSelectedCourseType] = useState("");
+    const [selectedSteopFilter, setSelectedSteopFilter] = useState("");
     const router = useRouter();
 
     useEffect(() => {
@@ -68,6 +71,20 @@ export default function CoursesPage() {
             setIsLoading(false);
         }
     };
+
+    // Filter courses based on StEOP status
+    const filteredCourses = courses.filter(course => {
+        if (selectedSteopFilter === 'required') {
+            return course.isSteopRequired;
+        }
+        if (selectedSteopFilter === 'allowed') {
+            return course.isSteopAllowed && !course.isSteopRequired;
+        }
+        if (selectedSteopFilter === 'after') {
+            return !course.isSteopRequired && !course.isSteopAllowed;
+        }
+        return true; // Show all if no StEOP filter selected
+    });
 
     const addCourseToUser = async (courseId: string) => {
         if (!user) return;
@@ -128,6 +145,31 @@ export default function CoursesPage() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-foreground mb-2">Course Catalog</h1>
                     <p className="text-foreground/60">Browse and add courses to your study plan</p>
+                    
+                    {/* StEOP Legend */}
+                    <div className="mt-4 p-4 bg-secondary/30 rounded-lg border border-border">
+                        <h3 className="text-sm font-semibold mb-3">StEOP (Studieneingangs- und Orientierungsphase) Legende:</h3>
+                        <div className="flex flex-wrap gap-4 text-sm">
+                            <div className="flex items-center gap-2">
+                                <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800 font-medium">
+                                    StEOP Pflicht
+                                </span>
+                                <span className="text-foreground/70">Muss für StEOP-Abschluss absolviert werden</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-800 font-medium">
+                                    StEOP erlaubt
+                                </span>
+                                <span className="text-foreground/70">Kann vor StEOP-Abschluss absolviert werden</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-800">
+                                    Nach StEOP
+                                </span>
+                                <span className="text-foreground/70">Erst nach StEOP-Abschluss möglich</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Search and Filters */}
@@ -172,23 +214,45 @@ export default function CoursesPage() {
                                     <option key={type} value={type}>{type}</option>
                                 ))}
                             </select>
+                            <select
+                                value={selectedSteopFilter}
+                                onChange={(e) => setSelectedSteopFilter(e.target.value)}
+                                className="px-4 py-2 border border-border rounded-md bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            >
+                                <option value="">All StEOP Status</option>
+                                <option value="required">StEOP Pflicht</option>
+                                <option value="allowed">StEOP erlaubt</option>
+                                <option value="after">Nach StEOP</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
                 {/* Course List */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {courses.map(course => (
+                    {filteredCourses.map(course => (
                         <div key={course.id} className="bg-secondary/50 rounded-lg p-6 border border-border">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
                                     <h3 className="text-lg font-semibold">{course.courseCode}</h3>
                                     <p className="text-sm text-foreground/60">{course.courseType} • {course.ects} ECTS</p>
                                 </div>
-                                <span className={`px-2 py-1 rounded text-xs ${course.semester === 'WS' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-                                    }`}>
-                                    {course.semester}
-                                </span>
+                                <div className="flex flex-col gap-1">
+                                    <span className={`px-2 py-1 rounded text-xs ${course.semester === 'WS' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                                        }`}>
+                                        {course.semester}
+                                    </span>
+                                    {course.isSteopRequired && (
+                                        <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800 font-medium">
+                                            StEOP Pflicht
+                                        </span>
+                                    )}
+                                    {course.isSteopAllowed && !course.isSteopRequired && (
+                                        <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-800 font-medium">
+                                            StEOP erlaubt
+                                        </span>
+                                    )}
+                                </div>
                             </div>
 
                             <h4 className="font-medium mb-2">{course.title}</h4>
@@ -226,7 +290,7 @@ export default function CoursesPage() {
                     ))}
                 </div>
 
-                {courses.length === 0 && !isLoading && (
+                {filteredCourses.length === 0 && !isLoading && (
                     <div className="text-center py-8">
                         <p className="text-foreground/60">No courses found matching your criteria.</p>
                     </div>
