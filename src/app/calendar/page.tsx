@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navigation } from '../components/Navigation';
 import { CalendarHeader } from './components/CalendarHeader';
@@ -77,7 +77,7 @@ export default function CalendarPage() {
             fetchTemplates();
             fetchActivityTypes();
         }
-    }, [user]);
+    }, [user]); // Removing dependencies to avoid re-declarations
 
     const fetchActivities = async () => {
         try {
@@ -86,7 +86,18 @@ export default function CalendarPage() {
             const response = await fetch(`/api/activities?userId=${user.id}`);
             if (response.ok) {
                 const data = await response.json();
-                const formattedActivities = data.map((activity: any) => ({
+                interface ActivityData {
+                    id: string;
+                    title: string;
+                    description?: string;
+                    startTime: string;
+                    endTime: string;
+                    type: string;
+                    color?: string;
+                    courseId?: string;
+                    courseName?: string;
+                }
+                const formattedActivities = data.map((activity: ActivityData) => ({
                     id: activity.id,
                     title: activity.title,
                     description: activity.description || '',
@@ -337,9 +348,6 @@ export default function CalendarPage() {
         }
     };
 
-    const handleDayClick = (dateString: string) => {
-        setSelectedDate(dateString);
-    };
 
     const handleActivityClick = (activity: Activity) => {
         setEditingActivity(activity);
@@ -351,7 +359,7 @@ export default function CalendarPage() {
         setIsModalOpen(true);
     };
 
-    const handleAddActivityByType = (type: any) => {
+    const handleAddActivityByType = () => {
         setEditingActivity(null);
         setSelectedDate(selectedDate || new Date().toISOString().split('T')[0]);
         setIsModalOpen(true);

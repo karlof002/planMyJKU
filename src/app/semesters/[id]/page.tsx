@@ -74,7 +74,7 @@ export default function SemesterDetailPage() {
             fetchSemesterDetails();
             fetchAvailableCourses();
         }
-    }, [user, semesterId]);
+    }, [user, semesterId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchSemesterDetails = async () => {
         try {

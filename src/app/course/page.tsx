@@ -47,7 +47,7 @@ export default function CoursesPage() {
         }
 
         fetchCourses();
-    }, [router]);
+    }, [router]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchCourses = async () => {
         try {
@@ -106,7 +106,7 @@ export default function CoursesPage() {
 
     useEffect(() => {
         fetchCourses();
-    }, [searchTerm, selectedFaculty, selectedSemester, selectedCourseType]);
+    }, [searchTerm, selectedFaculty, selectedSemester, selectedCourseType]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (isLoading) {
         return (

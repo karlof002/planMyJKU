@@ -101,10 +101,7 @@ export default function DashboardPage() {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('user');
-        router.push('/auth/login');
-    };
+
 
     if (isLoading) {
         return (
@@ -124,7 +121,7 @@ export default function DashboardPage() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-                    <p className="text-foreground/60">Welcome back! Here's your study progress overview</p>
+                    <p className="text-foreground/60">Welcome back! Here&apos;s your study progress overview</p>
                 </div>
 
                 {/* Stats Overview */}
