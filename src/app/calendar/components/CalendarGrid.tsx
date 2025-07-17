@@ -51,11 +51,16 @@ export function CalendarGrid({
         const startDate = new Date(startOfMonth);
         const endDate = new Date(endOfMonth);
 
-        // Go back to the first day of the week
-        startDate.setDate(startDate.getDate() - startDate.getDay());
+        // Go back to Monday (getDay() returns 0 for Sunday, 1 for Monday, etc.)
+        // We want Monday = 0, so we need to adjust
+        const startDay = startDate.getDay();
+        const mondayOffset = startDay === 0 ? 6 : startDay - 1; // Sunday = 6 days back, others = day - 1
+        startDate.setDate(startDate.getDate() - mondayOffset);
 
-        // Go forward to the last day of the week
-        endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+        // Go forward to Sunday
+        const endDay = endDate.getDay();
+        const sundayOffset = endDay === 0 ? 0 : 7 - endDay;
+        endDate.setDate(endDate.getDate() + sundayOffset);
 
         const days = [];
         const currentDay = new Date(startDate);
@@ -70,7 +75,10 @@ export function CalendarGrid({
 
     const generateWeekView = () => {
         const startOfWeek = new Date(currentDate);
-        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+        // Get Monday of the current week
+        const dayOfWeek = startOfWeek.getDay();
+        const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Sunday = 6 days back, others = day - 1
+        startOfWeek.setDate(currentDate.getDate() - mondayOffset);
 
         const days = [];
         for (let i = 0; i < 7; i++) {
@@ -139,7 +147,7 @@ export function CalendarGrid({
         setDraggedActivity(null);
     };
 
-    const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    const weekDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
     if (view === 'week') {
         return (
@@ -149,7 +157,7 @@ export function CalendarGrid({
                     {calendarDays.map((day, index) => (
                         <div key={index} className="p-4 text-center border-r border-border last:border-r-0">
                             <div className="text-sm font-medium text-muted-foreground">
-                                {weekDays[day.getDay()]}
+                                {weekDays[index]}
                             </div>
                             <div className={`text-2xl font-bold mt-1 ${isToday(day)
                                 ? 'text-blue-500 font-bold'
@@ -186,7 +194,7 @@ export function CalendarGrid({
                                             key={activity.id}
                                             className={`p-2 rounded-lg text-xs cursor-pointer hover:opacity-80 transition-opacity ${draggedActivity?.id === activity.id ? 'opacity-50' : ''
                                                 }`}
-                                            style={{ backgroundColor: activity.color + '20', borderLeft: `3px solid ${activity.color}` }}
+                                            style={{ backgroundColor: activity.color + '30', borderLeft: `3px solid ${activity.color}`, color: activity.color }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onActivityClick(activity);
@@ -195,10 +203,10 @@ export function CalendarGrid({
                                             onDragStart={(e) => handleDragStart(e, activity)}
                                             onDragEnd={handleDragEnd}
                                         >
-                                            <div className="font-medium text-card-foreground truncate">
+                                            <div className="font-medium truncate" style={{ color: activity.color }}>
                                                 {activity.title}
                                             </div>
-                                            <div className="text-sm text-muted-foreground">
+                                            <div className="text-sm" style={{ color: activity.color, opacity: 0.8 }}>
                                                 {formatTime(activity.startTime)} - {formatTime(activity.endTime)}
                                             </div>
                                         </div>
@@ -258,7 +266,7 @@ export function CalendarGrid({
                                         key={activity.id}
                                         className={`p-1 rounded text-xs cursor-pointer hover:opacity-80 transition-opacity ${draggedActivity?.id === activity.id ? 'opacity-50' : ''
                                             }`}
-                                        style={{ backgroundColor: activity.color + '20', borderLeft: `2px solid ${activity.color}` }}
+                                        style={{ backgroundColor: activity.color + '30', borderLeft: `2px solid ${activity.color}`, color: activity.color }}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             onActivityClick(activity);
@@ -267,10 +275,10 @@ export function CalendarGrid({
                                         onDragStart={(e) => handleDragStart(e, activity)}
                                         onDragEnd={handleDragEnd}
                                     >
-                                        <div className="font-medium text-card-foreground truncate">
+                                        <div className="font-medium truncate" style={{ color: activity.color }}>
                                             {activity.title}
                                         </div>
-                                        <div className="text-xs text-muted-foreground">
+                                        <div className="text-xs" style={{ color: activity.color, opacity: 0.8 }}>
                                             {formatTime(activity.startTime)}
                                         </div>
                                     </div>

@@ -466,6 +466,8 @@ export default function CalendarPage() {
                     onNavigate={view === 'month' ? navigateMonth : navigateWeek}
                     onAddActivity={handleAddActivity}
                     onOpenTemplates={() => setIsTemplateModalOpen(true)}
+                    view={view}
+                    onViewChange={setView}
                 />
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

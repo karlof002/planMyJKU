@@ -8,31 +8,28 @@ interface CalendarHeaderProps {
     onNavigate: (direction: 'prev' | 'next') => void;
     onAddActivity: () => void;
     onOpenTemplates: () => void;
+    view: 'month' | 'week';
+    onViewChange: (view: 'month' | 'week') => void;
 }
 
 export function CalendarHeader({
     currentDate,
     onNavigate,
     onAddActivity,
-    onOpenTemplates
+    onOpenTemplates,
+    view,
+    onViewChange
 }: CalendarHeaderProps) {
     return (
         <div className="bg-card border border-border rounded-2xl shadow-lg mb-6">
             <div className="p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    {/* Title and Date */}
-                    <div className="flex items-center gap-4">
-                        <div>
-                            <h1 className="text-2xl font-bold text-card-foreground">
-                                Calendar
-                            </h1>
-                            <p className="text-muted-foreground text-sm">
-                                {format(currentDate, 'MMMM yyyy', { locale: de })}
-                            </p>
-                        </div>
+                {/* Top Row: Title and Actions */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h1 className="text-2xl font-bold text-card-foreground">Calendar</h1>
+                        <p className="text-muted-foreground text-sm">Manage your activities and schedule</p>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex items-center gap-3">
                         <button
                             onClick={onAddActivity}
@@ -55,31 +52,69 @@ export function CalendarHeader({
                     </div>
                 </div>
 
-                {/* Navigation and View Controls */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6 pt-6 border-t border-border">
-                    {/* Navigation */}
-                    <div className="flex items-center gap-2">
+                {/* Bottom Row: Navigation and View Controls */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-border">
+                    {/* Month/Year Navigation */}
+                    <div className="flex items-center gap-3">
                         <button
                             onClick={() => onNavigate('prev')}
-                            className="p-2 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
+                            className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            title="Previous"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                         </button>
-                        <h2 className="text-lg font-semibold text-card-foreground min-w-[200px] text-center">
+
+                        <h2 className="text-lg font-semibold text-card-foreground min-w-[180px] text-center">
                             {format(currentDate, 'MMMM yyyy', { locale: de })}
                         </h2>
+
                         <button
                             onClick={() => onNavigate('next')}
-                            className="p-2 rounded-xl hover:bg-muted text-muted-foreground transition-colors"
+                            className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            title="Next"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
                     </div>
+
+                    {/* View Switcher */}
+                    <div className="flex items-center gap-1 bg-muted p-1 rounded-lg">
+                        <button
+                            onClick={() => onViewChange('month')}
+                            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${view === 'month'
+                                    ? 'bg-background text-foreground shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                        >
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Month
+                            </div>
+                        </button>
+                        <button
+                            onClick={() => onViewChange('week')}
+                            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${view === 'week'
+                                    ? 'bg-background text-foreground shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                        >
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                Week
+                            </div>
+                        </button>
+                    </div>
                 </div>
+
+
             </div>
         </div>
     );
