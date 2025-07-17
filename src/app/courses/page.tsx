@@ -151,19 +151,19 @@ export default function CoursesPage() {
                         <h3 className="text-sm font-semibold mb-3">StEOP (Studieneingangs- und Orientierungsphase) Legende:</h3>
                         <div className="flex flex-wrap gap-4 text-sm">
                             <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-900 dark:bg-destructive/20 dark:text-destructive font-medium border border-red-300 dark:border-destructive/30">
+                                <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-900 bg-destructive/20 text-destructive font-medium border border-red-300 border-destructive/30">
                                     StEOP Pflicht
                                 </span>
                                 <span className="text-foreground/70">Muss für StEOP-Abschluss absolviert werden</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-900 dark:bg-green-500/20 dark:text-green-400 font-medium border border-green-300 dark:border-green-500/30">
+                                <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-900 bg-green-500/20 text-green-400 font-medium border border-green-300 border-green-500/30">
                                     StEOP erlaubt
                                 </span>
                                 <span className="text-foreground/70">Kann vor StEOP-Abschluss absolviert werden</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-900 dark:bg-muted dark:text-muted-foreground border border-gray-300 dark:border-border">
+                                <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-900 bg-muted text-muted-foreground border border-gray-300 border-border">
                                     Nach StEOP
                                 </span>
                                 <span className="text-foreground/70">Erst nach StEOP-Abschluss möglich</span>
@@ -240,24 +240,24 @@ export default function CoursesPage() {
                                 <div className="flex flex-col gap-2 items-end">
                                     <span
                                         className={`px-3 py-1 rounded-full text-xs font-medium ${course.semester === 'WS'
-                                                ? 'bg-blue-200 text-blue-900 dark:bg-blue-900/30 dark:text-blue-300'
-                                                : 'bg-orange-200 text-orange-900 dark:bg-orange-900/30 dark:text-orange-300'
+                                            ? 'bg-blue-200 text-blue-900 bg-blue-900/30 text-blue-300'
+                                            : 'bg-orange-200 text-orange-900 bg-orange-900/30 text-orange-300'
                                             }`}
                                     >
                                         {course.semester}
                                     </span>
                                     {course.isSteopRequired && (
-                                        <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-900 dark:bg-destructive/20 dark:text-destructive font-medium border border-red-300 dark:border-destructive/30">
+                                        <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-900 bg-destructive/20 text-destructive font-medium border border-red-300 border-destructive/30">
                                             StEOP Pflicht
                                         </span>
                                     )}
                                     {course.isSteopAllowed && !course.isSteopRequired && (
-                                        <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-900 dark:bg-green-500/20 dark:text-green-400 font-medium border border-green-300 dark:border-green-500/30">
+                                        <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-900 bg-green-500/20 text-green-400 font-medium border border-green-300 border-green-500/30">
                                             StEOP erlaubt
                                         </span>
                                     )}
                                     {!course.isSteopRequired && !course.isSteopAllowed && (
-                                        <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-900 dark:bg-muted dark:text-muted-foreground border border-gray-300 dark:border-border">
+                                        <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-900 bg-muted text-muted-foreground border border-gray-300 border-border">
                                             Nach StEOP
                                         </span>
                                     )}
