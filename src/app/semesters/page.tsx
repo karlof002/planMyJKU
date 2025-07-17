@@ -255,18 +255,12 @@ export default function SemestersPage() {
                                 )}
                             </div>
 
-                            <div className="mt-6 flex space-x-2">
+                            <div className="mt-6">
                                 <button
                                     onClick={() => router.push(`/semesters/${semester.id}`)}
-                                    className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
                                 >
                                     View Details
-                                </button>
-                                <button
-                                    onClick={() => router.push(`/semesters/${semester.id}/edit`)}
-                                    className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                                >
-                                    Edit
                                 </button>
                             </div>
                         </div>
