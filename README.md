@@ -1,38 +1,74 @@
-# PlanMyJKU
+# 🎓 planMyJKU – Study Planning Platform for JKU Linz
 
-PlanMyJKU ist eine moderne Webanwendung für JKU-Informatik-Studierende, um ihren Studienfortschritt einfach, visuell und strukturiert zu planen und zu verfolgen.
-
-## 🎯 Features
-
-✅ Semesterweise Planung von Lehrveranstaltungen (LVAs)  
-✅ Übersicht des ECTS-Fortschritts in Diagrammen  
-✅ HTL-Anrechnungen direkt eintragbar  
-✅ Warnung bei ECTS-Grenzen pro Semester  
-✅ Detailansicht zu jeder LVA mit ECTS, Typ und Links  
-✅ Export als PDF oder Excel  
-✅ Mobile-optimierte Ansicht für unterwegs
+A comprehensive **Next.js 15** web application designed for students at **Johannes Kepler University (JKU) Linz** to organize courses, plan semesters, and track academic progress — with a special focus on **StEOP (Studieneingangs- und Orientierungsphase)** support.
 
 ---
 
-## 🚀 Tech Stack
+## 🌟 Features
 
-- **Frontend:** Angular, Angular Material
-- **Backend (geplant):** Node.js/.NET Core
-- **Datenbank (geplant):** PostgreSQL oder SQLite
-- **Styles:** Angular Material Themes
-- **Auth (geplant):** OAuth (Google, JKU-Account)
+### 📚 Course Catalog
+- Advanced search and filtering by **faculty**, **semester**, **course type**, and **StEOP status**.
+- Detailed course info including **ECTS points**, descriptions, and prerequisites.
+- **Color-coded StEOP integration** for easy identification.
+
+### 📅 Semester Management
+- Create **individual semesters** (WS/SS) with year specification.
+- **Drag-and-drop course planning** interface.
+- Automatic **ECTS total calculation** per semester.
+- Status management for active/inactive semesters.
+
+### 📊 Study Progress Tracking
+- Dashboard overview with **progress visualization**.
+- Statistics for ECTS distribution.
+- Visual indicators for achievements and milestones.
+- Goal management for academic targets.
+
+### 📆 Calendar Integration
+- Full semester calendar overview.
+- Appointment and activity management.
+- **Recurring event templates**.
+- Timeline view for visual semester layout.
+
+### 🟥🟩⚪ StEOP Support
+- **Red** = StEOP-mandatory  
+- **Green** = StEOP-allowed  
+- **Gray** = Post-StEOP  
+- Intelligent filtering by StEOP categories.
+- Progress tracking toward StEOP completion.
 
 ---
 
-## 🖼️ Screenshots
+## 🛠 Tech Stack
 
-*(Coming soon)*
+- **Frontend:** Next.js 15 + TypeScript
+- **Styling:** Tailwind CSS with Dark/Light mode
+- **Database:** Prisma ORM with PostgreSQL / SQLite
+- **Authentication:** Custom JWT-based auth
+- **Deployment:** Vercel-ready configuration
 
 ---
 
-## 🛠️ Installation
+## 🚀 Getting Started
 
-1. **Repo klonen:**
-   ```bash
-   git clone https://github.com/dein-username/PlanMyJKU.git
-   cd PlanMyJKU
+### **Prerequisites**
+- Node.js 18+
+- PostgreSQL or SQLite database
+
+### **Installation**
+```bash
+# Clone repository
+git clone https://github.com/yourusername/planMyJKU.git
+cd planMyJKU
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Fill in DATABASE_URL, JWT_SECRET, etc.
+
+# Run database migrations
+npx prisma migrate dev
+
+# Start development server
+npm run dev
