@@ -57,7 +57,7 @@ A comprehensive **Next.js 15** web application designed for students at **Johann
 ### **Installation**
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/planMyJKU.git
+git clone https://github.com/karlof002/planMyJKU.git
 cd planMyJKU
 
 # Install dependencies
